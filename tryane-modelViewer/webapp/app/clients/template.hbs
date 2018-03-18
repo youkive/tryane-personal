@@ -1,0 +1,34 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>externalId</td>
+                        <td>subscription SIPS Id</td>
+                        <td>Status</td>
+                        <td>Payment status</td>
+                        <td>enabled</td>
+                        <td>Dedicated Url</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each model as |client|}}
+                    <tr>
+                        <td>{{client.id}}</td>
+                        <td>{{client.name}}</td>
+                        <td>{{client.external_id}}</td>
+                        <td>{{client.subscription_sips_id}}</td>
+                        <td>{{client.status}}</td>
+                        <td>{{client.payment_status}}</td>
+                        <td>{{client.enabled}}</td>
+                        <td>{{client.dedicated_url}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

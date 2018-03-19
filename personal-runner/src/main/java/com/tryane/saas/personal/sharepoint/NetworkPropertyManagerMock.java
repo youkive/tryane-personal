@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tryane.saas.core.network.properties.INetworkPropertyManager;
 import com.tryane.saas.core.network.properties.NetworkProperty;
+import com.tryane.saas.core.network.properties.NetworkPropertyOperation;
 
 public class NetworkPropertyManagerMock implements INetworkPropertyManager {
 
@@ -83,6 +84,18 @@ public class NetworkPropertyManagerMock implements INetworkPropertyManager {
 	public List<NetworkProperty> findNetworkPropertiesWithNameAndValue(String propertyName, String value) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void performOperation(String networkId, NetworkPropertyOperation operation) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void performOperations(String networkId, List<NetworkPropertyOperation> operations) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

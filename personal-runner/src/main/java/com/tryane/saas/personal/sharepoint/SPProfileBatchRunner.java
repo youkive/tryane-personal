@@ -40,7 +40,7 @@ public class SPProfileBatchRunner {
 
 	private static final Logger			LOGGER		= LoggerFactory.getLogger(SPProfileBatchRunner.class);
 
-	private final static String			NETWORK_ID	= "s140";
+	private final static String			NETWORK_ID	= "s443590";
 
 	@Autowired
 	private ISPUserProfileAPI			userProfileAPI;
@@ -78,6 +78,8 @@ public class SPProfileBatchRunner {
 	}
 
 	protected void testImplementation() {
+		Long startTime = System.currentTimeMillis();
+
 		Network network = networkManager.getNetworkById(NETWORK_ID);
 		ClientContextHolder.setNetwork(network);
 
@@ -85,9 +87,38 @@ public class SPProfileBatchRunner {
 		String spUrl = networkPropertyManager.getNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.SHAREPOINT_MAINCOLLECTION_URL);
 
 		appTokenManager.initForTenant(tenantId);
-		CollaboratorCallback_Batch callback = new CollaboratorCallback_Batch(tenantId, spUrl);
+		//CollaboratorCallback_Batch callback = new CollaboratorCallback_Batch(tenantId, spUrl);
+		CollaboratorCallback_Simple callback = new CollaboratorCallback_Simple(spUrl, tenantId);
 		collaboratorManager.processAllValidCollaboratorsForClientAtDate(callback, LocalDate.now());
 		callback.finish();
+
+		Long finishTime = System.currentTimeMillis();
+		LOGGER.info("Time ellapsed : {} ms", finishTime - startTime);
+	}
+
+	class CollaboratorCallback_Simple implements ICallBack<Collaborator> {
+
+		private String	spUrl;
+
+		private String	tenantId;
+
+		public CollaboratorCallback_Simple(String spUrl, String tenantId) {
+			this.spUrl = spUrl;
+			this.tenantId = tenantId;
+		}
+
+		@Override
+		public void processObject(Collaborator collaborator) {
+			try {
+				SPUserProfile profile = userProfileAPI.getUserProfileProperties(spUrl, appTokenManager.geAppTokenGenerator(spUrl, tenantId).getToken(), collaborator.getExternalId());
+			} catch (O365ConnectionException | O365HttpErrorException | O365UserAuthenticationException e) {
+				LOGGER.error("", e);
+			}
+		}
+
+		public void finish() {
+
+		}
 	}
 
 	class CollaboratorCallback_Batch implements ICallBack<Collaborator> {

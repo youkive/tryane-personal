@@ -3,7 +3,6 @@ package com.tryane.saas.personal.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
@@ -11,7 +10,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @ComponentScan(basePackages = "com.tryane.saas")
 //@PropertySource - the last definition will win and override the previous ones.
 @PropertySource(ignoreResourceNotFound = true, value = { "classpath:/app.properties", "classpath:/connector.sharepoint.utils.properties", "file:${SAAS_HOME}/conf/saas.properties" })
-@EnableAspectJAutoProxy(proxyTargetClass = true)
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class PersonalAppConfig {
 
 	/* Permet d'utiliser les annotations @Value et les expressions ${}

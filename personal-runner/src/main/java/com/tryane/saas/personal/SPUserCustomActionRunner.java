@@ -8,7 +8,6 @@ import com.tryane.saas.connector.o365.utils.authentication.IO365Authenticator;
 import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
 import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
-import com.tryane.saas.connector.sharepoint.sitecollections.jsinjection.ISPJSInjectionManagerUtils;
 import com.tryane.saas.connector.sharepoint.utils.api.ISPSiteAPI;
 import com.tryane.saas.connector.sharepoint.utils.model.SPSiteUserCustomAction;
 import com.tryane.saas.core.ClientContextHolder;
@@ -43,7 +42,7 @@ public class SPUserCustomActionRunner {
 
 	private static final String		NETWORK_ID					= "s1";
 
-	private static final String		SITE_COLLECTION_URL			= "https://tryane211.sharepoint.com";
+	private static final String		SITE_COLLECTION_URL			= "https://tryane211.sharepoint.com/sites/modernui6";
 
 	public static void main(String[] args) {
 		System.setProperty("spring.profiles.active", "dev");
@@ -54,8 +53,8 @@ public class SPUserCustomActionRunner {
 			SPUserCustomActionRunner runner = new SPUserCustomActionRunner();
 			ctx.getAutowireCapableBeanFactory().autowireBean(runner);
 
-			//runner.executeRegisterOnSiteCollection(SITE_COLLECTION_URL);
-			runner.deleteUserCustomActionOnSiteCollection(SITE_COLLECTION_URL, "5a56930a-dc49-41b3-9656-e9ee9598587e");
+			runner.executeRegisterOnSiteCollection(SITE_COLLECTION_URL);
+			//runner.deleteUserCustomActionOnSiteCollection(SITE_COLLECTION_URL, "5a56930a-dc49-41b3-9656-e9ee9598587e");
 		} finally {
 			if (ctx != null) {
 				ctx.close();
@@ -80,11 +79,12 @@ public class SPUserCustomActionRunner {
 		}
 
 		SPSiteUserCustomAction userCustomAction = new SPSiteUserCustomAction();
-		userCustomAction.setTitle(ISPJSInjectionManagerUtils.buildTitleOfUserCustomAction(ta4spWebappUrl));
-		userCustomAction.setScriptBlock(buildJsScript(ta4spWebappUrl));
-		userCustomAction.setLocation(USERCUSTOMACTION_LOCATION);
+		userCustomAction.setTitle("BastienTrial");
+		userCustomAction.setName("BastienTrial");
+		//userCustomAction.setScriptBlock(buildJsScript(ta4spWebappUrl));
+		userCustomAction.setLocation("ClientSideExtension.ApplicationCustomizer");
 		userCustomAction.setSequence(USERCUSTOMACTION_SEQUENCE);
-
+		userCustomAction.setClientSideComponentId("a44a888a-8ba8-428d-a309-853b5a3aa521");
 		try {
 			siteApi.registerUserCustomAction(siteCollectionUrl, token, userCustomAction);
 		} catch (O365ConnectionException | O365HttpErrorException e) {

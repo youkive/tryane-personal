@@ -5,10 +5,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.tryane.saas.connector.o365.utils.authentication.IO365Authenticator;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
-import com.tryane.saas.connector.sharepoint.manager.injection.IInjectionManager;
+import com.tryane.saas.connector.sharepoint.sitecollections.usercutomactions.registration.IUserCustomActionRegistrationManager;
 import com.tryane.saas.core.AbstractSpringRunner;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
@@ -23,24 +24,29 @@ import jersey.repackaged.com.google.common.collect.Lists;
 
 public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 
-	private static final Logger			LOGGER		= LoggerFactory.getLogger(SummaryUserCustomActionStateRunner.class);
+	private static final Logger						LOGGER		= LoggerFactory.getLogger(SummaryUserCustomActionStateRunner.class);
 
-	private static final String			NETWORK_ID	= "s1";
-
-	@Autowired
-	private ISPSiteCollectionManager	siteCollectionManager;
+	private static final String						NETWORK_ID	= "s1";
 
 	@Autowired
-	private INetworkManager				networkManager;
+	private ISPSiteCollectionManager				siteCollectionManager;
 
 	@Autowired
-	private INetworkPropertyManager		networkPropertyManager;
+	private INetworkManager							networkManager;
 
 	@Autowired
-	private IInjectionManager			injectionManager;
+	private INetworkPropertyManager					networkPropertyManager;
 
 	@Autowired
-	private IO365Authenticator			authenticator;
+	@Qualifier("jsUcaRegistrationManager")
+	private IUserCustomActionRegistrationManager	jsInjectionManger;
+
+	@Autowired
+	@Qualifier("spfxUcaRegistrationManager")
+	private IUserCustomActionRegistrationManager	spfxInjectionManager;
+
+	@Autowired
+	private IO365Authenticator						authenticator;
 
 	public static void main(String[] args) {
 		new SummaryUserCustomActionStateRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
@@ -54,8 +60,8 @@ public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 			String token = getToken();
 			siteCollectionManager.getAllMonitoredSiteCollections().forEach(siteCollection -> {
 				SiteCollectionState state = new SiteCollectionState(siteCollection);
-				state.isMonitoredByJs = injectionManager.siteCollectionIsMonitoredByJsAgent(siteCollection.getId(), token);
-				state.isMonitoredBySpfxAgent = injectionManager.siteCollectionIsMonitoredByAddonAgent(siteCollection.getId(), token);
+				state.isMonitoredByJs = jsInjectionManger.siteCollectionHasUserCustomAction(siteCollection.getId(), token);
+				state.isMonitoredBySpfxAgent = spfxInjectionManager.siteCollectionHasUserCustomAction(siteCollection.getId(), token);
 				states.add(state);
 			});
 			displayResult(states);

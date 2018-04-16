@@ -1,4 +1,4 @@
-package com.tryane.saas.personal;
+package com.tryane.saas.personal.sharepoint.usercustomaction;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -10,7 +10,7 @@ export default Route.extend({
 
     model: function () {
         return new RSVP.Promise(function (resolve) {
-            $.get('/users', function (data) {
+            $.get('/api/v1/users', function (data) {
                 resolve(data);
             }).done(function (data) {
                 return A(data).map(function (item) {

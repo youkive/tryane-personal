@@ -1,6 +1,8 @@
 package com.tryane.saas.personal.sharepoint;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,21 +14,30 @@ import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.Network;
 import com.tryane.saas.core.sp.item.ISPItemManager;
 import com.tryane.saas.core.sp.item.SPItem;
-import com.tryane.saas.core.sp.item.SPItemPropertiesName;
+import com.tryane.saas.core.sp.site.ISPSiteManager;
+import com.tryane.saas.core.sp.site.SPSite;
+import com.tryane.saas.core.sp.site.SPSitePK;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
+import com.tryane.saas.personal.sharepoint.manager.IPersonalSPItemManager;
 import com.tryane.saas.utils.hibernate.ICallBack;
 import com.tryane.saas.utils.string.StringUtils;
 
 public class SPItemProcessRunner {
 
-	private static final Logger	LOGGER	= LoggerFactory.getLogger(SPItemProcessRunner.class);
+	private static final Logger		LOGGER	= LoggerFactory.getLogger(SPItemProcessRunner.class);
 
 	@Autowired
-	private INetworkManager		networkManager;
+	private INetworkManager			networkManager;
 
 	@Autowired
-	private ISPItemManager		itemManager;
+	private IPersonalSPItemManager	personalItemManager;
+
+	@Autowired
+	private ISPSiteManager			siteManager;
+
+	@Autowired
+	private ISPItemManager			itemManager;
 
 	public static void main(String[] args) {
 		System.setProperty("spring.profiles.active", "dev");
@@ -43,24 +54,43 @@ public class SPItemProcessRunner {
 		}
 	}
 
-	private final String NETWORK_ID = "s443632";
+	private final String NETWORK_ID = "s1452";
 
 	public void execute() {
 		Network network = networkManager.getNetworkById(NETWORK_ID);
 		ClientContextHolder.setNetwork(network);
 
-		AtomicLong countItemWithoutcreatorId = new AtomicLong(0);
-		itemManager.processAllItems(new ICallBack<SPItem>() {
+		displayItemWithFileUniqId("4c05759e-aa82-4319-858d-8c469fa1c5da");
+	}
+
+	public void searchItem() {
+		Set<String> siteIds = new HashSet<>();
+
+		personalItemManager.processAllItems(new ICallBack<SPItem>() {
 
 			@Override
 			public void processObject(SPItem item) {
-				String creatorId = item.getDataValue(SPItemPropertiesName.CREATOR_ITEM_EXTERNAL_ID);
-				if (StringUtils.isNullOrEmpty(creatorId)) {
-					countItemWithoutcreatorId.incrementAndGet();
+				if (StringUtils.isNotNullNorEmpty(item.getName()) && item.getName().toLowerCase().contains("cocktail")) {
+					LOGGER.info(item.getSpItemPK().getSiteId() + "/" + item.getSpItemPK().getId());
+					siteIds.add(item.getSiteId());
 				}
 			}
 		});
 
-		LOGGER.info("found {} items without creatorId", countItemWithoutcreatorId.get());
+		LOGGER.info("");
+		siteIds.forEach(siteId -> {
+			SPSite webSite = siteManager.getSPSiteById(new SPSitePK(siteId));
+			LOGGER.info("{} ({})", webSite.getUrl(), webSite.getCombinedSiteId());
+		});
+	}
+
+	public void displayItemWithFileUniqId(String fileUniqId) {
+		List<SPItem> items = itemManager.getItemsByFileUniqId(fileUniqId);
+		items.forEach(item -> {
+			LOGGER.info("{}/{}", item.getSpItemPK().getSiteId(), item.getId());
+			LOGGER.info("fileUniqId : {}", item.getFileUniqId());
+			LOGGER.info("name : {}", item.getName());
+			LOGGER.info("data : {}", item.getData());
+		});
 	}
 }

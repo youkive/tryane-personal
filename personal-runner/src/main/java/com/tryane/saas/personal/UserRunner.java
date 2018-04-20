@@ -42,7 +42,7 @@ public class UserRunner {
 	}
 
 	public void execute() {
-		User user = userManager.getUserByEmail("Bernard.MARIES@maif.fr");
+		User user = userManager.getUserByEmail("jean-francois.robe@renault.com");
 		//User user = userManager.getUserById(USER_ID_BASTIEN);
 		displayUser(user);
 	}

@@ -49,31 +49,31 @@ public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 	private IO365Authenticator						authenticator;
 
 	public static void main(String[] args) {
-		new SummaryUserCustomActionStateRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
+		new SummaryUserCustomActionStateRunner().runTest("", PersonalAppConfig.class, PersonalDatabaseConfig.class);
 	}
 
 	@Override
 	protected void testImplementation() {
-		try {
-			ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
-			List<SiteCollectionState> states = Lists.newArrayList();
-			String token = getToken();
-			siteCollectionManager.getAllMonitoredSiteCollections().forEach(siteCollection -> {
+		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
+		List<SiteCollectionState> states = Lists.newArrayList();
+		siteCollectionManager.getAllSiteCollectionsNotDeleted().forEach(siteCollection -> {
+			try {
+				String token = getToken(siteCollection.getRootUrl());
 				SiteCollectionState state = new SiteCollectionState(siteCollection);
 				state.isMonitoredByJs = jsInjectionManger.siteCollectionHasUserCustomAction(siteCollection.getId(), token);
 				state.isMonitoredBySpfxAgent = spfxInjectionManager.siteCollectionHasUserCustomAction(siteCollection.getId(), token);
 				states.add(state);
-			});
-			displayResult(states);
-		} catch (O365UserAuthenticationException e) {
-			LOGGER.error("", e);
-		}
+			} catch (O365UserAuthenticationException e) {
+				LOGGER.error("", e);
+			}
+
+		});
+		displayResult(states);
 	}
 
-	private String getToken() throws O365UserAuthenticationException {
+	private String getToken(String resource) throws O365UserAuthenticationException {
 		String tenant = networkPropertyManager.getNetworkPropertyValue(ClientContextHolder.getNetworkId(), NetworkPropertyNames.SHAREPOINT_TENANT);
-		String sharepointUrl = networkPropertyManager.getNetworkPropertyValue(ClientContextHolder.getNetworkId(), NetworkPropertyNames.SHAREPOINT_MAINCOLLECTION_URL);
-		return authenticator.getAppAccessToken(sharepointUrl, tenant).getAccessToken();
+		return authenticator.getAppAccessToken(resource, tenant).getAccessToken();
 	}
 
 	private void displayResult(List<SiteCollectionState> states) {

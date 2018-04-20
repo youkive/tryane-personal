@@ -11,7 +11,7 @@ import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
 import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
-import com.tryane.saas.connector.sharepoint.sitecollections.jsinjection.ISPJSInjectionManagerUtils;
+import com.tryane.saas.connector.sharepoint.sitecollections.usercutomactions.remove.ISPJSInjectionManagerUtils;
 import com.tryane.saas.connector.sharepoint.utils.api.ISPSiteAPI;
 import com.tryane.saas.connector.sharepoint.utils.model.SPSiteUserCustomAction;
 import com.tryane.saas.core.AbstractSpringRunner;
@@ -30,7 +30,7 @@ public class WSPUserCustomActionRunner extends AbstractSpringRunner {
 
 	private static final Logger			LOGGER		= LoggerFactory.getLogger(WSPUserCustomActionRunner.class);
 
-	private static final String			NETWORK_ID	= "s140";
+	private static final String			NETWORK_ID	= "s305";
 
 	@Autowired
 	private INetworkManager				networkManager;
@@ -66,7 +66,7 @@ public class WSPUserCustomActionRunner extends AbstractSpringRunner {
 			try {
 				List<SPSiteUserCustomAction> ucas = siteApi.getAllUserCustomActions(siteCollection.getUrl(), appTokenManager.geAppTokenGenerator(spUrl, tenantId).getToken());
 				ucas.stream().filter(uca -> isWSPUca(uca)).forEach(uca -> {
-					LOGGER.info("ICI found {}", siteCollection.getUrl());
+					LOGGER.info("ICI found WSP uca : {}", siteCollection.getUrl());
 				});
 				Long nbUcaTryane = ucas.stream().filter(uca -> isTryaneNewAgent(uca)).count();
 				if (nbUcaTryane > 0) {
@@ -88,11 +88,11 @@ public class WSPUserCustomActionRunner extends AbstractSpringRunner {
 
 	private Boolean isWSPUca(SPSiteUserCustomAction uca) {
 		String tryaneServerUrl = "https://analytics.tryane.com";
-		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl) && StringUtils.isNotNullNorEmpty(uca.getTitle()) && !uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfUserCustomAction(tryaneServerUrl));
+		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl) && (StringUtils.isNullOrEmpty(uca.getTitle()) || !uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfJsUserCustomAction(tryaneServerUrl)));
 	}
 
 	private Boolean isTryaneNewAgent(SPSiteUserCustomAction uca) {
 		String tryaneServerUrl = "https://analytics.tryane.com";
-		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl) && (StringUtils.isNullOrEmpty(uca.getTitle()) || uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfUserCustomAction(tryaneServerUrl)));
+		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl) && (StringUtils.isNotNullNorEmpty(uca.getTitle()) && uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfJsUserCustomAction(tryaneServerUrl)));
 	}
 }

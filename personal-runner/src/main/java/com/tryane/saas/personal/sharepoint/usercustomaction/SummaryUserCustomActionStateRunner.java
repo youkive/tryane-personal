@@ -49,7 +49,7 @@ public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 	private IO365Authenticator						authenticator;
 
 	public static void main(String[] args) {
-		new SummaryUserCustomActionStateRunner().runTest("", PersonalAppConfig.class, PersonalDatabaseConfig.class);
+		new SummaryUserCustomActionStateRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
 	}
 
 	@Override

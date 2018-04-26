@@ -37,12 +37,13 @@ public class UserRunner {
 
 	public void displayUser(User user) {
 		LOGGER.info("user id : {}", user.getId());
+		LOGGER.info("nom : {}", user.getDisplayName());
 		LOGGER.info("mail: {}", user.getMailAddress());
 		LOGGER.info("props : {}", user.getData().toString());
 	}
 
 	public void execute() {
-		User user = userManager.getUserByEmail("jean-francois.robe@renault.com");
+		User user = userManager.getUserByEmail("l.sportiello@bouygues-construction.com");
 		//User user = userManager.getUserById(USER_ID_BASTIEN);
 		displayUser(user);
 	}

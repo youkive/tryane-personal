@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.tryane.saas.connector.graph.utils.api.IGraphUserApi;
-import com.tryane.saas.connector.graph.utils.model.GraphUser;
+import com.tryane.saas.connector.graph.api.IGraphUserApi;
+import com.tryane.saas.connector.graph.model.GraphUser;
 import com.tryane.saas.connector.o365.utils.IO365Resources;
 import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
 import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
@@ -107,7 +107,7 @@ public class GraphUserRunner {
 			}
 		}
 
-		private void displauUser(GraphUser graphUser) {
+		private void displayUser(GraphUser graphUser) {
 			LOGGER.info("graph id : {}", graphUser.getId());
 			LOGGER.info("graph Email : {}", graphUser.getMail());
 			LOGGER.info("graph account Enabled :: {}", graphUser.getAccountEnabled());

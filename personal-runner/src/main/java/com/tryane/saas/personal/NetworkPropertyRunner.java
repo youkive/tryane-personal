@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.connector.configuration.ConnectorConfiguration;
 import com.tryane.saas.core.connector.configuration.ConnectorConfiguration.CsvCollabIdKeyType;
 import com.tryane.saas.core.connector.configuration.IConnectorConfigurationManager;
@@ -20,9 +19,9 @@ import com.tryane.saas.utils.jackson.JacksonUtils;
 
 public class NetworkPropertyRunner {
 
-	public static final String				NETWORK_ID		= "1897800";
+	public static final String				NETWORK_ID		= "s1";
 
-	public static final String				PROPERTY_NAME	= NetworkPropertyNames.YAMMER_PRIVATE_GROUP_ACCESS_ADMIN_ONLY;
+	public static final String				PROPERTY_NAME	= NetworkPropertyNames.DATA_PRIVACY_MODE;
 
 	public final String						NEW_VALUE		= Boolean.TRUE.toString();
 
@@ -53,10 +52,10 @@ public class NetworkPropertyRunner {
 	}
 
 	private void execute() {
-		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
-		setNetworkProperty();
+		//ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
+		//setNetworkProperty();
 		//displayNetworkProperty();
-		//setConnectorConfig();
+		setConnectorConfig();
 	}
 
 	private void displayNetworkProperty() {
@@ -71,10 +70,7 @@ public class NetworkPropertyRunner {
 	private void setConnectorConfig() {
 		ConnectorConfiguration connectorConfiguration = new ConnectorConfiguration();
 		connectorConfiguration.setCsvSourceEnabledforCollaboratorModel(true);
-		connectorConfiguration.getSources().add(CollaboratorPropertiesSource.CSV);
-		connectorConfiguration.setCsvDisplayNameHeaderName("name");
-		connectorConfiguration.setCsvEmailHeaderName("email");
-		connectorConfiguration.setCsvCollabIdKeyHeaderName("id");
+		connectorConfiguration.getSources().add(CollaboratorPropertiesSource.SP_USERPROFILE);
 		connectorConfiguration.setCsvCollabIdKeyType(CsvCollabIdKeyType.SHAREPOINT_ID);
 		//connectorConfigurationManager.setConnectorConfiguration(connectorConfiguration);
 		try {

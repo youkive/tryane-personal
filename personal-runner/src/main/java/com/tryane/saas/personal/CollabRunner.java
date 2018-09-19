@@ -21,11 +21,11 @@ public class CollabRunner {
 
 	private static Logger			LOGGER				= LoggerFactory.getLogger(CollabRunner.class);
 
-	private static final String		NETWORK_ID			= "s443571";
+	private static final String		NETWORK_ID			= "s443696";
 
-	private static final String		EMAIL_FILTER		= "a.kurtanich@biocodex.ua";
+	private static final String		EMAIL_FILTER		= "katelyn.estelow@avantorsciences.com";
 
-	private static final String		EXTERNAL_ID_FILTER	= "1524515187";
+	private static final String		EXTERNAL_ID_FILTER	= "i:0#.f|membership|johanna.goslin@avantorsciences.com";
 
 	@Autowired
 	private INetworkManager			networkManager;
@@ -54,10 +54,10 @@ public class CollabRunner {
 		Network bouyguesNetwork = networkManager.getNetworkById(NETWORK_ID);
 		ClientContextHolder.setNetwork(bouyguesNetwork);
 
-		searchCollaboratorByEmail(EMAIL_FILTER);
-		//searchCollaboratorByExternalId(EXTERNAL_ID_FILTER);
+		//searchCollaboratorByEmail(EMAIL_FILTER);
+		searchCollaboratorByExternalId(EXTERNAL_ID_FILTER);
 		//displayAllCollaborators();
-		//displayCollab(1469L);
+		//displayCollab(1049L);
 	}
 
 	private void displayAllCollaborators() {

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.csvreader.CsvReader;
-import com.tryane.saas.connector.graph.utils.api.reports.reader.GraphReportReader;
+import com.tryane.saas.connector.graph.api.reports.reader.GraphReportReader;
 import com.tryane.saas.personal.wurth.item.TryaneExportUser;
 
 public class TryaneExportReader extends GraphReportReader<TryaneExportUser> {

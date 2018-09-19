@@ -14,7 +14,6 @@ import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationExce
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
 import com.tryane.saas.connector.sharepoint.utils.api.ISPWebListAPI;
 import com.tryane.saas.connector.sharepoint.utils.model.SharepointSPItem;
-import com.tryane.saas.core.AbstractSpringRunner;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.properties.INetworkPropertyManager;
@@ -45,7 +44,6 @@ public class TASearchItemSPRunner extends AbstractSpringRunner {
 		new TASearchItemSPRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
 	}
 
-	@Override
 	protected void testImplementation() {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 
@@ -55,7 +53,7 @@ public class TASearchItemSPRunner extends AbstractSpringRunner {
 
 		try {
 			Set<String> found = Sets.newHashSet();
-			webListApi.procesAllItemsInListCreatedAfter_2(new LocalDate(0), "https://goairrosti.sharepoint.com", appTokenManager.geAppTokenGenerator(spUrl, tenantId).getToken(), "5cee0542-b377-48da-b19b-340ea9e3a0d1", new ICallBack<SharepointSPItem>() {
+			webListApi.procesAllItemsInListCreatedAfter(new LocalDate(0), "https://goairrosti.sharepoint.com", appTokenManager.geAppTokenGenerator(spUrl, tenantId).getToken(), "5cee0542-b377-48da-b19b-340ea9e3a0d1", new ICallBack<SharepointSPItem>() {
 
 				@Override
 				public void processObject(SharepointSPItem item) {

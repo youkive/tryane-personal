@@ -42,7 +42,7 @@ public class SearchUserRunner {
 
 	public void execute() {
 		//displayUserInfo(6852L);
-		searchUserPartOfEmail("tom.nordgard");
+		searchUserPartOfEmail("kenneth");
 	}
 
 	private void searchUserPartOfEmail(String textToFindInMail) {
@@ -60,6 +60,7 @@ public class SearchUserRunner {
 		User user = userManager.getUserById(userId);
 		LOGGER.info("user Id : {}", user.getId());
 		LOGGER.info("email : {}", user.getMailAddress());
+		LOGGER.info("login ext : {}", user.getLogin());
 		LOGGER.info("{}", user.getData().toString());
 	}
 }

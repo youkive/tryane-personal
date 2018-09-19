@@ -22,9 +22,9 @@ import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 import com.tryane.saas.utils.hibernate.ICallBack;
 
-public class TASearchItemSPRunner extends AbstractSpringRunner {
+public class TASearchItemOnSPRunner extends AbstractSpringRunner {
 
-	private static final Logger		LOGGER		= LoggerFactory.getLogger(TASearchItemSPRunner.class);
+	private static final Logger		LOGGER		= LoggerFactory.getLogger(TASearchItemOnSPRunner.class);
 
 	private final String			NETWORK_ID	= "s443662";
 
@@ -41,7 +41,7 @@ public class TASearchItemSPRunner extends AbstractSpringRunner {
 	private IAppTokenManager		appTokenManager;
 
 	public static void main(String[] args) {
-		new TASearchItemSPRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
+		new TASearchItemOnSPRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
 	}
 
 	protected void testImplementation() {

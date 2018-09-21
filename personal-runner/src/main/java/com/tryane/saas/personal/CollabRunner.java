@@ -21,11 +21,11 @@ public class CollabRunner {
 
 	private static Logger			LOGGER				= LoggerFactory.getLogger(CollabRunner.class);
 
-	private static final String		NETWORK_ID			= "s443696";
+	private static final String		NETWORK_ID			= "s443708";
 
 	private static final String		EMAIL_FILTER		= "katelyn.estelow@avantorsciences.com";
 
-	private static final String		EXTERNAL_ID_FILTER	= "i:0#.f|membership|johanna.goslin@avantorsciences.com";
+	private static final String		EXTERNAL_ID_FILTER	= "i:0#.f|membership|cathy.ibrahim_vwr.com#ext#@avantorsciences.onmicrosoft.com";
 
 	@Autowired
 	private INetworkManager			networkManager;
@@ -55,8 +55,8 @@ public class CollabRunner {
 		ClientContextHolder.setNetwork(bouyguesNetwork);
 
 		//searchCollaboratorByEmail(EMAIL_FILTER);
-		searchCollaboratorByExternalId(EXTERNAL_ID_FILTER);
-		//displayAllCollaborators();
+		//searchCollaboratorByExternalId(EXTERNAL_ID_FILTER);
+		displayAllCollaborators();
 		//displayCollab(1049L);
 	}
 
@@ -65,9 +65,7 @@ public class CollabRunner {
 
 			@Override
 			public void processObject(Collaborator collaborator) {
-				if (!collaborator.getExternalId().contains("@hilti.com")) {
-					LOGGER.info("{}", collaborator.getExternalId());
-				}
+				LOGGER.info("{}", collaborator.getExternalId());
 			}
 		});
 	}

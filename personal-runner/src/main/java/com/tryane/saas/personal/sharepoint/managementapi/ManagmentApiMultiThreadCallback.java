@@ -1,5 +1,6 @@
 package com.tryane.saas.personal.sharepoint.managementapi;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,6 +51,11 @@ public class ManagmentApiMultiThreadCallback implements ICallBack<O365ManagmentC
 
 	public ManagmentApiMultiThreadCallback(CsvWriter csvWriter) {
 		this.csvWriter = csvWriter;
+		try {
+			this.csvWriter.writeRecord(new String[] { "Id", "Operation", "SiteId", "WebId", "ListId", "ObjectId", "ListItemUniqId", "UserId", "CreationTime" });
+		} catch (IOException e) {
+			LOGGER.error("", e);
+		}
 	}
 
 	@PostConstruct
@@ -103,7 +109,7 @@ public class ManagmentApiMultiThreadCallback implements ICallBack<O365ManagmentC
 					try {
 						List<String> record = Lists.newArrayList(content.getId(), content.getOperation(), content.getSite(), content.getWebId(), content.getListId(), content.getObjectId(), content.getListItemUniqId(), content.getUserId(), content.getCreationTime());
 						synchronized (this) {
-							csvWriter.writeRecord(record.toArray(new String[0]));
+							writeInCsv(record.toArray(new String[0]));
 						}
 					} catch (Exception e) {
 						LOGGER.info("", e);
@@ -115,5 +121,9 @@ public class ManagmentApiMultiThreadCallback implements ICallBack<O365ManagmentC
 				LOGGER.debug("", e);
 			}
 		}
+	}
+
+	public synchronized void writeInCsv(String[] toWrite) throws IOException {
+		csvWriter.writeRecord(toWrite);
 	}
 }

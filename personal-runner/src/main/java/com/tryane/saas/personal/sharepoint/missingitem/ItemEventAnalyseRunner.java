@@ -46,9 +46,9 @@ public class ItemEventAnalyseRunner extends AbstractSpringRunner {
 
 	private static final Logger			LOGGER			= LoggerFactory.getLogger(ItemEventAnalyseRunner.class);
 
-	private static final String			CSV_DIRECTORY	= "src/main/resources/com/tryane/saas/personal/sharepoint/missingitems";
+	private static final String			CSV_DIRECTORY	= "src/test/resources/com/tryane/saas/results";
 
-	private static final String			FILE_NAME		= "s443673_itemNotFound_2018-10-02.csv";
+	private static final String			FILE_NAME		= "s443673_itemNotFound_2018-10-03.csv";
 
 	private static final String			NETWORK_ID		= "s443673";
 
@@ -203,6 +203,9 @@ public class ItemEventAnalyseRunner extends AbstractSpringRunner {
 				String itemId = itemPk.getId().split("/")[1];
 
 				SPSite website = siteManager.getSPSiteById(new SPSitePK(itemPk.getSiteId()));
+				if(website == null) {
+					continue;
+				}
 				try {
 					SharepointSPItem itemSP = listApi.getItemInList(website.getUrl(), appTokenManager.geAppTokenGenerator(mainCollectionUrl, tenantId).getToken(), listId, itemId);
 					if (itemSP != null) {

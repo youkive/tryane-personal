@@ -42,7 +42,7 @@ public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 
 	private static final Logger			LOGGER				= LoggerFactory.getLogger(ITemNotFoundInEventRunner.class);
 
-	private static final LocalDate[]	ANALYSIS_PERIOD		= new LocalDate[] { LocalDate.parse("2018-05-10"), LocalDate.parse("2018-05-29") };
+	private static final LocalDate[]	ANALYSIS_PERIOD		= new LocalDate[] { LocalDate.parse("2018-05-09"), LocalDate.parse("2018-09-30") };
 
 	private static final String			RESSOURCE_FOLDER	= "src/test/resources/com/tryane/saas/results";
 

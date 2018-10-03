@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.csvreader.CsvWriter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.event.Event;
 import com.tryane.saas.core.event.IEventCallBack;
@@ -28,13 +29,13 @@ import com.tryane.saas.core.period.Day;
 import com.tryane.saas.core.sp.item.ISPItemManager;
 import com.tryane.saas.core.sp.item.SPItemPK;
 import com.tryane.saas.core.sp.list.ISPListManager;
+import com.tryane.saas.core.sp.list.ListBaseTemplate;
 import com.tryane.saas.core.sp.list.SPList;
 import com.tryane.saas.core.sp.list.SPListPK;
 import com.tryane.saas.core.sp.site.SPSitePK;
 import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
-import com.tryane.saas.results.sharepoint.site.category.ISPActionCategoryManager;
 
 public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 	private static final String			NETWORK_ID			= "s443673";
@@ -53,9 +54,6 @@ public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 
 	@Autowired
 	private ISPListManager				spListManager;
-
-	@Autowired
-	private ISPActionCategoryManager	spActionCategoryManager;
 
 	@Autowired
 	private IEventManager				eventManager;
@@ -87,7 +85,7 @@ public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 		// process batch of items
 		int processed = 0;
 		for (List<SPItemPK> itemIdList : splittedItemIds) {
-			spItemManager.getItemsIn(itemIdList).forEach(i -> itemAcumulator.itemCount.remove(i.getSpItemPK()));
+			spItemManager.getItemsIn(Sets.newHashSet(itemIdList)).forEach(i -> itemAcumulator.itemCount.remove(i.getSpItemPK()));
 			processed += loadBy;
 			LOGGER.info("Processed {}/{} items for unknown identification", processed, totalItemCount);
 		}
@@ -306,7 +304,7 @@ public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 			if (template == null) {
 				return false;
 			}
-			return spActionCategoryManager.doSaveItem(template);
+			return isTargetListToSaveItem(template);
 		default:
 			return false;
 		}
@@ -327,5 +325,9 @@ public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 		String siteId = new SPSitePK(consolidatedEvent.getPropertyValue(SPEventPropertyNames.COLLECTION_ID), consolidatedEvent.getPropertyValue(SPEventPropertyNames.SITE_ID)).getCombinedSiteId();
 
 		return new SPItemPK(id, siteId);
+	}
+
+	public boolean isTargetListToSaveItem(Integer baseTemplate) {
+		return baseTemplate == ListBaseTemplate.PAGES || baseTemplate == ListBaseTemplate.WEBPAGELIBRARY || baseTemplate == ListBaseTemplate.PICTURELIBRARY || baseTemplate == ListBaseTemplate.ASSET_LIBRARY_VIDEO_CHANNEL || baseTemplate == ListBaseTemplate.DOCUMENTLIBRARY;
 	}
 }

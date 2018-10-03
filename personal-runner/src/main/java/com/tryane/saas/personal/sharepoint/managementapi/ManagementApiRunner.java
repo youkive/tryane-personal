@@ -34,7 +34,7 @@ public class ManagementApiRunner extends AbstractSpringRunner {
 
 	private static final Logger			LOGGER				= LoggerFactory.getLogger(ManagementApiRunner.class);
 
-	private static final String			NETWORK_ID			= "s27824";
+	private static final String			NETWORK_ID			= "s443696";
 
 	private static final String			RESSOURCE_FOLDER	= "src/main/resources/com/tryane/saas/personal/sharepoint/managmentapi";
 

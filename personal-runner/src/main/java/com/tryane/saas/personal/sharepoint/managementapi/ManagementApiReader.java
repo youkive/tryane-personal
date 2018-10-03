@@ -44,13 +44,13 @@ public class ManagementApiReader extends AbstractSpringRunner {
 
 	private static final Logger			LOGGER				= LoggerFactory.getLogger(ManagementApiReader.class);
 
-	private static final String			NETWORK_ID			= "s27824";
+	private static final String			NETWORK_ID			= "s443696";
 
 	private static final LocalDate		START_DATE			= LocalDate.parse("2018-09-14");
 
 	private static final String			RESSOURCE_FOLDER	= "src/main/resources/com/tryane/saas/personal/sharepoint/managmentapi";
 
-	private static final String			FILE_NAME_MAA		= "s27824_2018-09-21.csv";
+	private static final String			FILE_NAME_MAA		= "s443696_2018-09-24.csv";
 
 	@Autowired
 	private ISPSearchAPI				searchApi;

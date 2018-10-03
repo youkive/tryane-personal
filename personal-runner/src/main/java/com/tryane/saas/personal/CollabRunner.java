@@ -1,5 +1,8 @@
 package com.tryane.saas.personal;
 
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ public class CollabRunner {
 
 	private static Logger			LOGGER				= LoggerFactory.getLogger(CollabRunner.class);
 
-	private static final String		NETWORK_ID			= "s443708";
+	private static final String		NETWORK_ID			= "s443696";
 
 	private static final String		EMAIL_FILTER		= "katelyn.estelow@avantorsciences.com";
 
@@ -61,13 +64,16 @@ public class CollabRunner {
 	}
 
 	private void displayAllCollaborators() {
-		collaboratorManager.processAllCollaboratorsForClient(new ICallBack<Collaborator>() {
+		AtomicLong count = new AtomicLong(0L);
+		collaboratorManager.processAllValidCollaboratorsAndExtForClientAtDate(new ICallBack<Collaborator>() {
 
 			@Override
 			public void processObject(Collaborator collaborator) {
+				count.incrementAndGet();
 				LOGGER.info("{}", collaborator.getExternalId());
 			}
-		});
+		}, LocalDate.now());
+		LOGGER.info("{} collaborators", count.get());
 	}
 
 	private void searchCollaboratorByExternalId(String externalIdToSearch) {

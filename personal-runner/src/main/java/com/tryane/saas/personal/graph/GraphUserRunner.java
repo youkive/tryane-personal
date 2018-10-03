@@ -29,7 +29,7 @@ public class GraphUserRunner {
 
 	private static final Logger		LOGGER		= LoggerFactory.getLogger(GraphUserRunner.class);
 
-	private final String			NETWORK_ID	= "s1";
+	private final String			NETWORK_ID	= "s443720";
 
 	@Autowired
 	private INetworkManager			networkManager;
@@ -98,6 +98,7 @@ public class GraphUserRunner {
 		@Override
 		public void processObject(GraphUser graphUser) {
 			count.incrementAndGet();
+			displayUser(graphUser);
 			displayCount();
 		}
 
@@ -111,7 +112,7 @@ public class GraphUserRunner {
 			LOGGER.info("graph id : {}", graphUser.getId());
 			LOGGER.info("graph Email : {}", graphUser.getMail());
 			LOGGER.info("graph account Enabled :: {}", graphUser.getAccountEnabled());
-			LOGGER.info("graph UPN : ", graphUser.getUserPrincipalName());
+			LOGGER.info("graph UPN : {}", graphUser.getUserPrincipalName());
 		}
 
 		private void finish() {

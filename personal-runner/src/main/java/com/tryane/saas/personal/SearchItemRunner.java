@@ -1,6 +1,5 @@
 package com.tryane.saas.personal;
 
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import com.tryane.saas.core.sp.item.ISPItemManager;
 import com.tryane.saas.core.sp.item.SPItem;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
-import com.tryane.saas.utils.string.StringUtils;
 
 public class SearchItemRunner {
 
@@ -47,11 +45,8 @@ public class SearchItemRunner {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 
 		itemManager.processAllItems(item -> {
-			String dateAsString = item.getDataValue("creationdate");
-			if (StringUtils.isNotNullNorEmpty(dateAsString)) {
-				if (LocalDate.parse("2018-09-12").isBefore(LocalDate.parse(dateAsString))) {
-					itemToString(item);
-				}
+			if (item.getName() != null && item.getName().toLowerCase().contains("senior")) {
+				itemToString(item);
 			}
 		});
 	}

@@ -54,13 +54,13 @@ public class SPItemProcessRunner {
 		}
 	}
 
-	private final String NETWORK_ID = "s1452";
+	private final String NETWORK_ID = "s1";
 
 	public void execute() {
 		Network network = networkManager.getNetworkById(NETWORK_ID);
 		ClientContextHolder.setNetwork(network);
 
-		displayItemWithFileUniqId("4c05759e-aa82-4319-858d-8c469fa1c5da");
+		displayItemWithFileUniqId("879873fb-e4c4-47b9-b352-482ebda2d52e");
 	}
 
 	public void searchItem() {

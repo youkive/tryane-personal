@@ -41,6 +41,7 @@ public class UpdateMissingItemOnEventsRunner extends AbstractSpringRunner {
 		appTokenManager.initForTenant(tenantId);
 
 		recoverProcess.checkForMissingItemsOnPeriod(START_DATE, END_DATE);
+		appTokenManager.clearForTenant(tenantId);
 	}
 
 	public static void main(String[] args) {

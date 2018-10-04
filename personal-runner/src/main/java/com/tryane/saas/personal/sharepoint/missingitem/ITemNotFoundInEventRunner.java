@@ -36,15 +36,16 @@ import com.tryane.saas.core.sp.site.SPSitePK;
 import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
+import com.tryane.saas.utils.string.StringUtils;
 
 public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 	private static final String			NETWORK_ID			= "s443673";
 
 	private static final Logger			LOGGER				= LoggerFactory.getLogger(ITemNotFoundInEventRunner.class);
 
-	private static final LocalDate[]	ANALYSIS_PERIOD		= new LocalDate[] { LocalDate.parse("2018-05-10"), LocalDate.parse("2018-05-29") };
+	private static final LocalDate[]	ANALYSIS_PERIOD		= new LocalDate[] { LocalDate.parse("2018-05-09"), LocalDate.parse("2018-09-30") };
 
-	private static final String			RESSOURCE_FOLDER	= "src/test/resources/com/tryane/saas/results";
+	private static final String			RESSOURCE_FOLDER	= "src/test/resources/com/tryane/saas/personal/sharepoint/missingitem";
 
 	@Autowired
 	private ISPItemManager				spItemManager;
@@ -302,6 +303,10 @@ public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 			// check if item is stored locally
 			Integer template = event.getPropertyValueAsInteger(SPEventPropertyNames.LIST_TEMPLATE);
 			if (template == null) {
+				return false;
+			}
+			String itemId = event.getPropertyValue(SPEventPropertyNames.ITEM_ID);
+			if (StringUtils.isNotNullNorEmpty(itemId) && "-1".equals(itemId)) {
 				return false;
 			}
 			return isTargetListToSaveItem(template);

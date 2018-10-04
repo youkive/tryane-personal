@@ -15,11 +15,11 @@ import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 
 public class UpdateMissingItemOnEventsRunner extends AbstractSpringRunner {
 
-	private static final String						NETWORK_ID	= "";
+	private static final String						NETWORK_ID	= "s443673";
 
-	private static final LocalDate					START_DATE	= LocalDate.parse("");
+	private static final LocalDate					START_DATE	= LocalDate.parse("2018-08-01");
 
-	private static final LocalDate					END_DATE	= LocalDate.parse("");
+	private static final LocalDate					END_DATE	= LocalDate.parse("2018-09-30");
 
 	@Autowired
 	private INetworkManager							networkManager;

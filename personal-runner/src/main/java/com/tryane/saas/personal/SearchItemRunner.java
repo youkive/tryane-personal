@@ -16,7 +16,7 @@ public class SearchItemRunner {
 
 	private static final Logger	LOGGER		= LoggerFactory.getLogger(SearchItemRunner.class);
 
-	private final String		NETWORK_ID	= "s443696";
+	private final String		NETWORK_ID	= "s443673";
 
 	@Autowired
 	private ISPItemManager		itemManager;

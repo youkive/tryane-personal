@@ -46,9 +46,9 @@ public class ItemEventAnalyseRunner extends AbstractSpringRunner {
 
 	private static final Logger			LOGGER			= LoggerFactory.getLogger(ItemEventAnalyseRunner.class);
 
-	private static final String			CSV_DIRECTORY	= "src/test/resources/com/tryane/saas/results";
+	private static final String			CSV_DIRECTORY	= "src/test/resources/com/tryane/saas/personal/sharepoint/missingitem";
 
-	private static final String			FILE_NAME		= "s443673_itemNotFound_2018-10-03.csv";
+	private static final String			FILE_NAME		= "s443673_itemNotFound_2018-10-05.csv";
 
 	private static final String			NETWORK_ID		= "s443673";
 

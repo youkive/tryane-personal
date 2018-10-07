@@ -63,8 +63,13 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<artifactId>saas-con-sharepoint-utils</artifactId>
+			<artifactId>saas-con-sharepoint</artifactId>
 			<groupId>com.tryane.saas.connectors</groupId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>saas-results-core</artifactId>
+			<groupId>com.tryane.saas.results</groupId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

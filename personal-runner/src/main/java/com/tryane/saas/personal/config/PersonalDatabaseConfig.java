@@ -87,7 +87,7 @@ public class PersonalDatabaseConfig {
 	public LocalContainerEntityManagerFactoryBean clientEntityManagerFactoryBean() {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(commonClientDataSource());
-		em.setPackagesToScan("com.tryane.saas.core.client", "com.tryane.saas.core.network", "com.tryane.saas.core.user", "com.tryane.saas.core.error", "com.tryane.saas.utils.global", "com.tryane.saas.payment.invoice", "com.tryane.saas.payment.specialoffer");
+		em.setPackagesToScan("com.tryane.saas.core", "com.tryane.saas.results",  "com.tryane.saas.utils.global", "com.tryane.saas.payment.invoice", "com.tryane.saas.payment.specialoffer");
 		em.setPersistenceUnitName("saas-client-data");
 
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

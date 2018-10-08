@@ -32,7 +32,6 @@ import com.tryane.saas.core.sp.list.SPList;
 import com.tryane.saas.core.sp.site.ISPSiteManager;
 import com.tryane.saas.core.sp.site.SPSite;
 import com.tryane.saas.core.sp.site.SPSitePK;
-import com.tryane.saas.core.sp.site.SPSitePropertyNames;
 import com.tryane.saas.core.sp.sitecol.SPSiteCollection;
 import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
@@ -40,6 +39,10 @@ import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 import com.tryane.saas.utils.hibernate.SingleTransactionHibernateBatch;
 import com.tryane.saas.utils.multithreading.TryaneThreadFactoryBuilder;
 
+/**
+ * Mise à jour des items en base avec les champs is_deleted (Boolean) et list_template
+ * runner associé à SAAS-3200
+ */
 public class UpdateNewContentTopItemRunner extends AbstractSpringRunner {
 
 	private static final Logger		LOGGER		= LoggerFactory.getLogger(UpdateNewContentTopItemRunner.class);
@@ -121,7 +124,7 @@ public class UpdateNewContentTopItemRunner extends AbstractSpringRunner {
 					Optional<SPItem> itemInDbOpt = itemsInDb.stream().filter(item -> item.getSpItemPK().equals(itemPKFromSP)).findFirst();
 					if (itemInDbOpt.isPresent()) {
 						// update item
-						itemInDbOpt.get().setDataValue(SPItemPropertiesNames.WEBSITE_TEMPLATE, website.getProps().get(SPSitePropertyNames.WEB_TEMPLATE).asText());
+						itemInDbOpt.get().setDataValue(SPItemPropertiesNames.LIST_TEMPLATE, itemFromSP.getParentList().getBaseTemplate().toString());
 						itemBatch.addToUpdate(itemInDbOpt.get());
 						itemPkInDb.remove(itemPKFromSP);
 					}
@@ -129,7 +132,7 @@ public class UpdateNewContentTopItemRunner extends AbstractSpringRunner {
 
 				for (SPItemPK itemPkDeleted : itemPkInDb) {
 					SPItem itemInDb = itemsInDb.stream().filter(item -> item.getSpItemPK().equals(itemPkDeleted)).findFirst().get();
-					itemInDb.setDataValue(SPItemPropertiesNames.WEBSITE_TEMPLATE, website.getProps().get(SPSitePropertyNames.WEB_TEMPLATE).asText());
+					itemInDb.setDataValue(SPItemPropertiesNames.LIST_TEMPLATE, list.getBaseTemplate().toString());
 					itemInDb.setDataValue(SPItemPropertiesNames.DELETED_AT, LocalDate.now().toString());
 					itemBatch.addToUpdate(itemInDb);
 				}

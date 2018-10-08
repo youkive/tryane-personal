@@ -13,6 +13,9 @@ import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 
+/**
+ * Mise à jour des items en base en parcourant les events quin'ont pas d'item associés en base
+ */
 public class UpdateMissingItemOnEventsRunner extends AbstractSpringRunner {
 
 	private static final String						NETWORK_ID	= "s443673";

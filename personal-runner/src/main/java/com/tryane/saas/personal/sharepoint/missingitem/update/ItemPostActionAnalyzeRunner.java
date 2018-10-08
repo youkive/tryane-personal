@@ -43,7 +43,7 @@ public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 		AtomicLong notUpdatedCount = new AtomicLong(0);
 		itemManager.processAllItems(item -> {
 			total.incrementAndGet();
-			if (!StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.WEBSITE_TEMPLATE))) {
+			if (!StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.LIST_TEMPLATE))) {
 				notUpdatedCount.incrementAndGet();
 				SPList list = listManager.getList(item.getSiteId(), item.getId().split("/")[0]);
 				if (list == null) {

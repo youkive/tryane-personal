@@ -38,6 +38,9 @@ import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 import com.tryane.saas.utils.string.StringUtils;
 
+/**
+ * Détection des events de lecture en base de données qui n'ont aucun item associé
+ */
 public class ITemNotFoundInEventRunner extends AbstractSpringRunner {
 	private static final String			NETWORK_ID			= "s443673";
 

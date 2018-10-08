@@ -43,13 +43,15 @@ public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 		AtomicLong notUpdatedCount = new AtomicLong(0);
 		itemManager.processAllItems(item -> {
 			total.incrementAndGet();
-			if (!StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.LIST_TEMPLATE))) {
+			if (!(StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.LIST_TEMPLATE)) || StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.IS_DELETED)) || StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.DELETED_AT)))) {
 				notUpdatedCount.incrementAndGet();
 				SPList list = listManager.getList(item.getSiteId(), item.getId().split("/")[0]);
 				if (list == null) {
 					LOGGER.error("Strange not found list {}/{}", item.getSiteId(), item.getId().split("/")[0]);
 				} else if (list.getDeletionDate() == null) {
 					LOGGER.error("List not deleted {}/{}", item.getSiteId(), item.getId().split("/")[0]);
+				} else {
+					LOGGER.error("strange strange {}/{}", item.getSiteId(), item.getId().split("/")[0]);
 				}
 			}
 		});

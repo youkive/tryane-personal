@@ -24,48 +24,48 @@ import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 
 public class SpItemUpdaterProcessRunner extends AbstractSpringRunner {
 
-private static final Logger LOGGER = LoggerFactory.getLogger(SpItemUpdaterProcessRunner.class);
-	
-	private static final String NETWORK_ID = "s443673";
-	
+	private static final Logger				LOGGER		= LoggerFactory.getLogger(SpItemUpdaterProcessRunner.class);
+
+	private static final String				NETWORK_ID	= "s443673";
+
 	@Autowired
-	private INetworkManager networkManager;
-	
+	private INetworkManager					networkManager;
+
 	@Autowired
-	private INetworkPropertyManager networkPropertyManager;
-	
+	private INetworkPropertyManager			networkPropertyManager;
+
 	@Autowired
-	private ISPItemUpdaterProcess spItemUpdater;
-	
+	private ISPItemUpdaterProcess			spItemUpdater;
+
 	@Autowired
-	private IAppTokenManager appTokenManager;
-	
+	private IAppTokenManager				appTokenManager;
+
 	@Autowired
-	private IConnectorContextInitialiser				connectorContextInitialiser;
-	
+	private IConnectorContextInitialiser	connectorContextInitialiser;
+
 	@Autowired
-	private IIDManager idService;
+	private IIDManager						idService;
 
 	@Override
 	protected void testImplementation() {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 		String tenantId = networkPropertyManager.getNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.SHAREPOINT_TENANT);
-		
+
 		ConnectorExecution connectorExecution = new ConnectorExecution();
 		connectorExecution.setExecutionDay(LocalDate.now());
 		connectorExecution.setConnectorType(NetworkType.SHAREPOINT);
-		connectorExecution.setNetworkId("s11");
+		connectorExecution.setNetworkId("s443673");
 		connectorContextInitialiser.initConnectorContext(LocalDate.now().minusDays(1), LocalDate.now().minusDays(1), connectorExecution);
 		appTokenManager.initForTenant(tenantId);
 		idService.initForCurrentNetwork();
-		
+
 		try {
 			spItemUpdater.updateItems(tenantId);
 		} catch (O365UserAuthenticationException | O365ConnectionException | O365HttpErrorException | InterruptedException e) {
 			LOGGER.error("", e);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		new SpItemUpdaterProcessRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
 	}

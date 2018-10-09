@@ -3,6 +3,7 @@ package com.tryane.saas.personal.sharepoint.missingitem;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import com.tryane.saas.core.sp.item.SPItem;
 import com.tryane.saas.core.sp.item.SPItemPK;
 import com.tryane.saas.core.sp.list.ISPListManager;
 import com.tryane.saas.core.sp.list.SPListPK;
+import com.tryane.saas.core.sp.site.SPSitePK;
 import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
@@ -28,7 +30,7 @@ public class CleanItemDBRunner extends AbstractSpringRunner {
 
 	private static final Logger	LOGGER		= LoggerFactory.getLogger(CleanItemDBRunner.class);
 
-	private static final String	NETWORK_ID	= "s443673";
+	private static final String	NETWORK_ID	= "s11";
 
 	@Autowired
 	private INetworkManager		networkManager;
@@ -52,17 +54,21 @@ public class CleanItemDBRunner extends AbstractSpringRunner {
 				listPksWithNoItems.add(list.getSpListPK());
 			}
 		});
-
+		
 		AtomicLong count = new AtomicLong(0);
 		SingleTransactionHibernateBatch<SPItem> itemBatch = itemManager.createItemBatch();
-		itemManager.processAllItems(item -> {
-			SPItemPK itemPK = item.getSpItemPK();
-			SPListPK associatedListPk = new SPListPK(itemPK.getId().split("/")[0], itemPK.getSiteId());
-			if (listPksWithNoItems.contains(associatedListPk)) {
-				count.incrementAndGet();
-				itemBatch.addToDelete(item);
-			}
-		});
+		// on process les items sur les sites à parcourir pour éviter un OOM au parcours de tous les items
+		Set<SPSitePK> sitesPK = listPksWithNoItems.stream().map(listPK -> new SPSitePK(listPK.getSiteId())).collect(Collectors.toSet());
+		for(SPSitePK sitePK : sitesPK) {
+			itemManager.processAllItemsForSite(sitePK, item -> {
+				SPItemPK itemPK = item.getSpItemPK();
+				SPListPK associatedListPk = new SPListPK(itemPK.getId().split("/")[0], itemPK.getSiteId());
+				if (listPksWithNoItems.contains(associatedListPk)) {
+					count.incrementAndGet();
+					itemBatch.addToDelete(item);
+				}
+			});
+		}
 		itemBatch.flushAll();
 
 		LOGGER.info("{} items deleted", count.get());

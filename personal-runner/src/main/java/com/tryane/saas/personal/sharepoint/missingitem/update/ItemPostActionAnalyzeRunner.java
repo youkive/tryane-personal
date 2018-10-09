@@ -47,7 +47,7 @@ public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 				notUpdatedCount.incrementAndGet();
 				SPList list = listManager.getList(item.getSiteId(), item.getId().split("/")[0]);
 				if (list == null) {
-					listIdStrange.add(list);
+					//listIdStrange.add(list);
 				} else if (list.getDeletionDate() == null) {
 					listNotDeleted.add(list);
 				} else {

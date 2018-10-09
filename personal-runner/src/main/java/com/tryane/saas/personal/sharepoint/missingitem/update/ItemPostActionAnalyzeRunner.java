@@ -1,5 +1,7 @@
 package com.tryane.saas.personal.sharepoint.missingitem.update;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
@@ -37,20 +39,28 @@ public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 		AtomicLong total = new AtomicLong(0);
 		AtomicLong notUpdatedCount = new AtomicLong(0);
+		Set<SPList> listIdStrange = new HashSet<>();
+		Set<SPList> listNotDeleted = new HashSet<>();
 		itemManager.processAllItems(item -> {
 			total.incrementAndGet();
 			if (!(StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.LIST_TEMPLATE)) || StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.DELETED_AT)))) {
 				notUpdatedCount.incrementAndGet();
 				SPList list = listManager.getList(item.getSiteId(), item.getId().split("/")[0]);
 				if (list == null) {
-					LOGGER.error("Strange not found list {}/{}", item.getSiteId(), item.getId().split("/")[0]);
+					listIdStrange.add(list);
 				} else if (list.getDeletionDate() == null) {
-					LOGGER.error("List not deleted {}/{}", item.getSiteId(), item.getId().split("/")[0]);
+					listNotDeleted.add(list);
 				} else {
-					LOGGER.error("strange strange {}/{}", item.getSiteId(), item.getId().split("/")[0]);
+					listIdStrange.add(list);
 				}
 			}
 		});
+		for (SPList list : listIdStrange) {
+			LOGGER.error("Strange not found list {}/{}", list.getSpListPK().getSiteId(), list.getSpListPK().getListId());
+		}
+		for (SPList list : listNotDeleted) {
+			LOGGER.error("List not deleted {}/{}", list.getSpListPK().getSiteId(), list.getSpListPK().getListId());
+		}
 		LOGGER.info("{} not updated on {} items", notUpdatedCount.get(), total.get());
 	}
 

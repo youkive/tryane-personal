@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tryane.saas.connector.common.manager.collaboratorid.IIDManager;
 import com.tryane.saas.connector.common.manager.context.IConnectorContextInitialiser;
-import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
-import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
-import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
 import com.tryane.saas.connector.sharepoint.process.item.ISPItemUpdaterProcess;
 import com.tryane.saas.core.ClientContextHolder;
@@ -21,12 +18,13 @@ import com.tryane.saas.core.network.properties.NetworkPropertyNames;
 import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
+import com.tryane.saas.recompute.manager.IRecomputeManager;
 
 public class SpItemUpdaterProcessRunner extends AbstractSpringRunner {
 
 	private static final Logger				LOGGER		= LoggerFactory.getLogger(SpItemUpdaterProcessRunner.class);
 
-	private static final String				NETWORK_ID	= "s11";
+	private static final String				NETWORK_ID	= "s443673";
 
 	@Autowired
 	private INetworkManager					networkManager;
@@ -46,6 +44,9 @@ public class SpItemUpdaterProcessRunner extends AbstractSpringRunner {
 	@Autowired
 	private IIDManager						idService;
 
+	@Autowired
+	private IRecomputeManager				recomputeManager;
+
 	@Override
 	protected void testImplementation() {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
@@ -58,12 +59,15 @@ public class SpItemUpdaterProcessRunner extends AbstractSpringRunner {
 		connectorContextInitialiser.initConnectorContext(LocalDate.now().minusDays(1), LocalDate.now().minusDays(1), connectorExecution);
 		appTokenManager.initForTenant(tenantId);
 		idService.initForCurrentNetwork();
+		//
+		//		try {
+		//			spItemUpdater.updateItems(tenantId);
+		//		} catch (O365UserAuthenticationException | O365ConnectionException | O365HttpErrorException | InterruptedException e) {
+		//			LOGGER.error("", e);
+		//		}
 
-		try {
-			spItemUpdater.updateItems(tenantId);
-		} catch (O365UserAuthenticationException | O365ConnectionException | O365HttpErrorException | InterruptedException e) {
-			LOGGER.error("", e);
-		}
+		LOGGER.info("RECOMPUTE");
+		recomputeManager.recomputeIfRequired();
 	}
 
 	public static void main(String[] args) {

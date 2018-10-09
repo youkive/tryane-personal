@@ -12,7 +12,6 @@ import com.tryane.saas.core.sp.item.ISPItemManager;
 import com.tryane.saas.core.sp.item.SPItemPropertiesNames;
 import com.tryane.saas.core.sp.list.ISPListManager;
 import com.tryane.saas.core.sp.list.SPList;
-import com.tryane.saas.core.sp.site.ISPSiteManager;
 import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
@@ -31,9 +30,6 @@ public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 	private ISPItemManager		itemManager;
 
 	@Autowired
-	private ISPSiteManager		siteManager;
-
-	@Autowired
 	private ISPListManager		listManager;
 
 	@Override
@@ -43,7 +39,7 @@ public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 		AtomicLong notUpdatedCount = new AtomicLong(0);
 		itemManager.processAllItems(item -> {
 			total.incrementAndGet();
-			if (!(StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.LIST_TEMPLATE)) || StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.IS_DELETED)) || StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.DELETED_AT)))) {
+			if (!(StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.LIST_TEMPLATE)) || StringUtils.isNotNullNorEmpty(item.getDataValue(SPItemPropertiesNames.DELETED_AT)))) {
 				notUpdatedCount.incrementAndGet();
 				SPList list = listManager.getList(item.getSiteId(), item.getId().split("/")[0]);
 				if (list == null) {

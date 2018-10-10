@@ -14,6 +14,8 @@ import com.tryane.saas.core.sp.item.ISPItemManager;
 import com.tryane.saas.core.sp.item.SPItemPropertiesNames;
 import com.tryane.saas.core.sp.list.ISPListManager;
 import com.tryane.saas.core.sp.list.SPList;
+import com.tryane.saas.core.sp.sitecol.ISPSiteCollectionManager;
+import com.tryane.saas.core.sp.sitecol.SPSiteCollection;
 import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
@@ -21,18 +23,21 @@ import com.tryane.saas.utils.string.StringUtils;
 
 public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 
-	private static final Logger	LOGGER		= LoggerFactory.getLogger(ItemPostActionAnalyzeRunner.class);
+	private static final Logger			LOGGER		= LoggerFactory.getLogger(ItemPostActionAnalyzeRunner.class);
 
-	private static String		NETWORK_ID	= "s443673";
-
-	@Autowired
-	private INetworkManager		networkManager;
+	private static String				NETWORK_ID	= "s443673";
 
 	@Autowired
-	private ISPItemManager		itemManager;
+	private INetworkManager				networkManager;
 
 	@Autowired
-	private ISPListManager		listManager;
+	private ISPItemManager				itemManager;
+
+	@Autowired
+	private ISPListManager				listManager;
+
+	@Autowired
+	private ISPSiteCollectionManager	siteCollectionManager;
 
 	@Override
 	protected void testImplementation() {
@@ -55,13 +60,24 @@ public class ItemPostActionAnalyzeRunner extends AbstractSpringRunner {
 				}
 			}
 		});
+
+		Long siteCollNotSupervisedCount = 0L;
 		for (SPList list : listIdStrange) {
+			SPSiteCollection siteCollection = siteCollectionManager.getSPSiteCollectionById(list.getSpListPK().getSiteId().split("/")[0]);
+			if (!siteCollection.getIsSupervised()) {
+				siteCollNotSupervisedCount++;
+			}
 			LOGGER.error("Strange not found list {}/{}", list.getSpListPK().getSiteId(), list.getSpListPK().getListId());
 		}
 		for (SPList list : listNotDeleted) {
+			SPSiteCollection siteCollection = siteCollectionManager.getSPSiteCollectionById(list.getSpListPK().getSiteId().split("/")[0]);
+			if (!siteCollection.getIsSupervised()) {
+				siteCollNotSupervisedCount++;
+			}
 			LOGGER.error("List not deleted {}/{}", list.getSpListPK().getSiteId(), list.getSpListPK().getListId());
 		}
 		LOGGER.info("{} not updated on {} items", notUpdatedCount.get(), total.get());
+		LOGGER.info("{} list not updated due to siteColl not supervised on {} strange list", siteCollNotSupervisedCount, listIdStrange.size() + listNotDeleted.size());
 	}
 
 	public static void main(String[] args) {

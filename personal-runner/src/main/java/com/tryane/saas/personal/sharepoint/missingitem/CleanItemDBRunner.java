@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tryane.saas.connector.sharepoint.items.ISPItemUtils;
+import com.tryane.saas.connector.sharepoint.manager.items.ISPItemUtils;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.sp.item.ISPItemManager;

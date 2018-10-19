@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
-import com.tryane.saas.connector.sharepoint.items.missingitems.ISPRecoverEmptyAndMissingItemsProcess;
+import com.tryane.saas.connector.sharepoint.process.item.missingitems.ISPRecoverEmptyAndMissingItemsProcess;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.properties.INetworkPropertyManager;

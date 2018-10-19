@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tryane.saas.connector.common.manager.collaboratorid.IIDManager;
 import com.tryane.saas.connector.common.manager.context.IConnectorContextInitialiser;
-import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
-import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
-import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
 import com.tryane.saas.connector.sharepoint.process.item.ISPItemUpdaterProcess;
 import com.tryane.saas.core.ClientContextHolder;
@@ -62,12 +59,12 @@ public class SpItemUpdaterProcessRunner extends AbstractSpringRunner {
 		connectorContextInitialiser.initConnectorContext(LocalDate.now().minusDays(1), LocalDate.now().minusDays(1), connectorExecution);
 		appTokenManager.initForTenant(tenantId);
 		idService.initForCurrentNetwork();
-
-		try {
-			spItemUpdater.updateItems(tenantId);
-		} catch (O365UserAuthenticationException | O365ConnectionException | O365HttpErrorException | InterruptedException e) {
-			LOGGER.error("", e);
-		}
+		//
+		//		try {
+		//			spItemUpdater.updateItems(tenantId);
+		//		} catch (O365UserAuthenticationException | O365ConnectionException | O365HttpErrorException | InterruptedException e) {
+		//			LOGGER.error("", e);
+		//		}
 
 		LOGGER.info("RECOMPUTE");
 		recomputeManager.recomputeIfRequired();

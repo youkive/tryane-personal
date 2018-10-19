@@ -12,9 +12,9 @@ public class ClientPropertyRunner {
 
 	private static final Long		CLIENT_ID		= 1L;
 
-	private static final String		PROPERTY_NAME	= ClientPropertyNames.ACCOUNT_CLOSED_DATE;
+	private static final String		PROPERTY_NAME	= ClientPropertyNames.LOWCOST_NBUSERS_RESTRICTION;
 
-	private static final String		VALUE			= "2017-11-01";
+	private static final String		VALUE			= "20";
 
 	@Autowired
 	private IClientPropertyManager	clientpropertyManager;

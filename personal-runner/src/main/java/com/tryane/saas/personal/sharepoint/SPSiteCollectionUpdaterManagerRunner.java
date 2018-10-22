@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tryane.saas.connector.common.manager.collaboratorid.IIDManager;
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
 import com.tryane.saas.connector.sharepoint.manager.sitecollection.ISPSiteCollectionUpdaterManager;
 import com.tryane.saas.connector.sharepoint.manager.sitecollection.SPSiteCollectionUpdateContext;
@@ -24,9 +25,9 @@ import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 
-public class SPSiteUpdaterProcessRunner extends AbstractSpringRunner {
+public class SPSiteCollectionUpdaterManagerRunner extends AbstractSpringRunner {
 
-	private static final Logger				LOGGER		= LoggerFactory.getLogger(SPSiteUpdaterProcessRunner.class);
+	private static final Logger				LOGGER		= LoggerFactory.getLogger(SPSiteCollectionUpdaterManagerRunner.class);
 
 	private final String					NETWORK_ID	= "s443708";
 
@@ -50,16 +51,20 @@ public class SPSiteUpdaterProcessRunner extends AbstractSpringRunner {
 	@Autowired
 	private ISPSiteCollectionUpdaterManager	siteCollectionUpdaterManager;
 
+	@Autowired
+	private IIDManager						idManager;
+
 	@Override
 	protected void testImplementation() {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 
 		String tenantId = networkPropertyManager.getNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.SHAREPOINT_TENANT);
 		appTokenManager.initForTenant(tenantId);
+		idManager.initForCurrentNetwork();
 
 		SPSite website = siteManager.getSPSiteById(new SPSitePK("64cd4ffa-ddc2-4986-98e1-122f83ecc38c/7164d6e9-8d4a-42a3-98a5-5a6414d34e67"));
 		SPSiteCollection siteCollection = siteCollectionManager.getSPSiteCollectionById(website.getCollectionId());
-		SPSiteCollectionUpdateContext spSiteCollectionUpdateContext = new SPSiteCollectionUpdateContext(LocalDate.now().minusDays(1), tenantId, 1);
+		SPSiteCollectionUpdateContext spSiteCollectionUpdateContext = new SPSiteCollectionUpdateContext(LocalDate.now().minusDays(1), tenantId, 4);
 
 		ConnectorContext.init(new ConnectorExecution(), startDate, startDate, false, new ConnectorStats());
 
@@ -67,13 +72,20 @@ public class SPSiteUpdaterProcessRunner extends AbstractSpringRunner {
 			siteCollectionUpdaterManager.updateSiteCollection(siteCollection, spSiteCollectionUpdateContext);
 		} catch (InterruptedException e) {
 			LOGGER.error("", e);
+		} finally {
+			try {
+				spSiteCollectionUpdateContext.waitAllSiteUpdateCompleted();
+			} catch (InterruptedException e) {
+				LOGGER.error("", e);
+			}
 		}
+		LOGGER.info("FINI DE OUF");
 
 		spSiteCollectionUpdateContext.getListIdsInDataBase().forEach(listId -> LOGGER.info("{}", listId));
 	}
 
 	public static void main(String[] args) {
-		new SPSiteUpdaterProcessRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
+		new SPSiteCollectionUpdaterManagerRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
 	}
 
 }

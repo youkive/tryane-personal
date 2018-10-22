@@ -34,7 +34,7 @@ public class ManagementApiRunner extends AbstractSpringRunner {
 
 	private static final Logger			LOGGER				= LoggerFactory.getLogger(ManagementApiRunner.class);
 
-	private static final String			NETWORK_ID			= "s443696";
+	private static final String			NETWORK_ID			= "s1";
 
 	private static final String			RESSOURCE_FOLDER	= "src/main/resources/com/tryane/saas/personal/sharepoint/managmentapi";
 
@@ -71,7 +71,7 @@ public class ManagementApiRunner extends AbstractSpringRunner {
 
 			O365ManagmentProcessContext context = new O365ManagmentProcessContext();
 			context.setTenantId(tenantId);
-			context.setStartDate(LocalDate.parse("2018-09-10"));
+			context.setStartDate(LocalDate.parse("2018-10-16"));
 			context.setEndDate(LocalDate.now().plusDays(1));
 			context.setManagementApiTokenSupplier(new IO365TokenSupplier() {
 

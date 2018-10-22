@@ -24,7 +24,7 @@ public class SpItemUpdaterProcessRunner extends AbstractSpringRunner {
 
 	private static final Logger				LOGGER		= LoggerFactory.getLogger(SpItemUpdaterProcessRunner.class);
 
-	private static final String				NETWORK_ID	= "s443632";
+	private static final String				NETWORK_ID	= "s443673";
 
 	@Autowired
 	private INetworkManager					networkManager;
@@ -55,7 +55,7 @@ public class SpItemUpdaterProcessRunner extends AbstractSpringRunner {
 		ConnectorExecution connectorExecution = new ConnectorExecution();
 		connectorExecution.setExecutionDay(LocalDate.now());
 		connectorExecution.setConnectorType(NetworkType.SHAREPOINT);
-		connectorExecution.setNetworkId("s11");
+		connectorExecution.setNetworkId("s1");
 		connectorContextInitialiser.initConnectorContext(LocalDate.now().minusDays(1), LocalDate.now().minusDays(1), connectorExecution);
 		appTokenManager.initForTenant(tenantId);
 		idService.initForCurrentNetwork();

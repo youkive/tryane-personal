@@ -16,7 +16,7 @@ public class SearchItemRunner {
 
 	private static final Logger	LOGGER		= LoggerFactory.getLogger(SearchItemRunner.class);
 
-	private final String		NETWORK_ID	= "s443673";
+	private final String		NETWORK_ID	= "s1";
 
 	@Autowired
 	private ISPItemManager		itemManager;
@@ -45,9 +45,7 @@ public class SearchItemRunner {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 
 		itemManager.processAllItems(item -> {
-			if (item.getName() != null && item.getName().toLowerCase().contains("senior")) {
-				itemToString(item);
-			}
+			itemToString(item);
 		});
 	}
 

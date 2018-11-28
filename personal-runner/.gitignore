@@ -5,3 +5,6 @@
 .project
 
 **/*.swp
+
+src/main/resources/com/tryane/saas/personal/sharepoint/**/*.csv
+src/test/resources/com/tryane/saas/personal/sharepoint/**/*.csv

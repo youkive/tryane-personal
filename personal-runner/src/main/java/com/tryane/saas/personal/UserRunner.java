@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.tryane.saas.core.client.IClientManager;
 import com.tryane.saas.core.user.IUserManager;
 import com.tryane.saas.core.user.User;
 import com.tryane.saas.core.user.UserPropertiesByNetwork;
@@ -19,6 +20,9 @@ public class UserRunner {
 
 	@Autowired
 	private IUserManager		userManager;
+
+	@Autowired
+	private IClientManager		clientManager;
 
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext ctx = null;
@@ -43,9 +47,12 @@ public class UserRunner {
 	}
 
 	public void execute() {
-		User user = userManager.getUserByEmail("l.sportiello@bouygues-construction.com");
+		//User user = userManager.getUserByEmail("bastien.vaneenaeme@tryane.com");
 		//User user = userManager.getUserById(USER_ID_BASTIEN);
-		displayUser(user);
+		//displayUser(user);
+
+		//displayUsersOfClient(1L);
+		displayAllUsersWithEmail("bastien.vaneenaeme@tryane.com");
 	}
 
 	public void setGroupAdminProperties() {
@@ -53,6 +60,22 @@ public class UserRunner {
 		setPropertyForNetwork(user, "500603", UserPropertiesByNetwork.TOKEN, null);
 		setPropertyForNetwork(user, "500603", UserPropertiesByNetwork.GROUP_ADMIN, null);
 		userManager.updateUser(user);
+	}
+
+	private void displayUsersOfClient(Long clientId) {
+		userManager.getAllUsers(clientId).forEach(user -> {
+			displayUser(user);
+		});
+	}
+
+	private void displayAllUsersWithEmail(String email) {
+		clientManager.getAllClientIds().forEach(clientId -> {
+			userManager.getAllUsers(clientId).stream().filter(user -> {
+				return user.getMailAddress().equals(email);
+			}).forEach(user -> {
+				displayUser(user);
+			});
+		});
 	}
 
 	private void setPropertyForNetwork(User user, String networkId, UserPropertiesByNetwork networkPropertyName, Object value) {

@@ -7,20 +7,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.tryane.saas.connector.o365.utils.authentication.IO365Authenticator;
+import com.google.common.collect.Lists;
+import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
+import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
+import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
 import com.tryane.saas.connector.sharepoint.sitecollections.usercutomactions.registration.IUserCustomActionRegistrationManager;
-import com.tryane.saas.core.AbstractSpringRunner;
+import com.tryane.saas.connector.sharepoint.utils.context.SPSiteCollectionContext;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.properties.INetworkPropertyManager;
 import com.tryane.saas.core.network.properties.NetworkPropertyNames;
 import com.tryane.saas.core.sp.sitecol.ISPSiteCollectionManager;
 import com.tryane.saas.core.sp.sitecol.SPSiteCollection;
+import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
-
-import jersey.repackaged.com.google.common.collect.Lists;
 
 public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 
@@ -46,7 +48,7 @@ public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 	private IUserCustomActionRegistrationManager	spfxInjectionManager;
 
 	@Autowired
-	private IO365Authenticator						authenticator;
+	private IAppTokenManager						appTokenManager;
 
 	public static void main(String[] args) {
 		new SummaryUserCustomActionStateRunner().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
@@ -56,24 +58,28 @@ public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 	protected void testImplementation() {
 		ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 		List<SiteCollectionState> states = Lists.newArrayList();
+
+		String tenantId = networkPropertyManager.getNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.SHAREPOINT_TENANT);
+		String spUrl = networkPropertyManager.getNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.SHAREPOINT_MAINCOLLECTION_URL);
+		appTokenManager.initForTenant(tenantId);
+
 		siteCollectionManager.getAllSiteCollectionsNotDeleted().forEach(siteCollection -> {
 			try {
-				String token = getToken(siteCollection.getRootUrl());
 				SiteCollectionState state = new SiteCollectionState(siteCollection);
-				state.isMonitoredByJs = jsInjectionManger.siteCollectionHasUserCustomAction(siteCollection.getId(), token);
-				state.isMonitoredBySpfxAgent = spfxInjectionManager.siteCollectionHasUserCustomAction(siteCollection.getId(), token);
+				SPSiteCollectionContext scContext = new SPSiteCollectionContext(siteCollection, appTokenManager.geAppTokenGenerator(spUrl, tenantId));
+				state.isMonitoredByJs = jsInjectionManger.siteCollectionHasUserCustomAction(scContext);
+				state.isMonitoredBySpfxAgent = spfxInjectionManager.siteCollectionHasUserCustomAction(scContext);
 				states.add(state);
 			} catch (O365UserAuthenticationException e) {
+				LOGGER.error("", e);
+			} catch (O365ConnectionException e) {
+				LOGGER.error("", e);
+			} catch (O365HttpErrorException e) {
 				LOGGER.error("", e);
 			}
 
 		});
 		displayResult(states);
-	}
-
-	private String getToken(String resource) throws O365UserAuthenticationException {
-		String tenant = networkPropertyManager.getNetworkPropertyValue(ClientContextHolder.getNetworkId(), NetworkPropertyNames.SHAREPOINT_TENANT);
-		return authenticator.getAppAccessToken(resource, tenant).getAccessToken();
 	}
 
 	private void displayResult(List<SiteCollectionState> states) {

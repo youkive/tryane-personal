@@ -42,7 +42,7 @@ public class SearchUserRunner {
 
 	public void execute() {
 		//displayUserInfo(6852L);
-		searchUserPartOfEmail("kenneth");
+		searchUserPartOfEmail("krishnashetty");
 	}
 
 	private void searchUserPartOfEmail(String textToFindInMail) {

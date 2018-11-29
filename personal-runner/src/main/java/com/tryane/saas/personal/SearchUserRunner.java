@@ -61,6 +61,7 @@ public class SearchUserRunner {
 		LOGGER.info("user Id : {}", user.getId());
 		LOGGER.info("email : {}", user.getMailAddress());
 		LOGGER.info("login ext : {}", user.getLogin());
+		LOGGER.info("Creation date : {}", user.getCreationDate());
 		LOGGER.info("{}", user.getData().toString());
 	}
 }

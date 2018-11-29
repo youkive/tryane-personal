@@ -42,7 +42,7 @@ public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 
 	private static final Logger						LOGGER				= LoggerFactory.getLogger(SummaryUserCustomActionStateRunner.class);
 
-	private static final String						NETWORK_ID			= "s1";
+	private static final String						NETWORK_ID			= "s140";
 
 	private static final String						RESSOURCE_FOLDER	= "src/main/resources/com/tryane/saas/personal/sharepoint/usercustomactions";
 
@@ -87,6 +87,7 @@ public class SummaryUserCustomActionStateRunner extends AbstractSpringRunner {
 			csvWriter = new CsvWriter(outputStream, ';', StandardCharsets.UTF_8);
 			csvWriter.writeRecord(new String[] { "siteCollectionId", "siteCollectionUrl", "isMonitored", "nbJsUCA", "nbSPFXUca", "nbWSPUca" });
 			for (SPSiteCollection siteCollection : siteCollectionManager.getAllSiteCollectionsNotDeleted()) {
+				LOGGER.info("analyse {}", siteCollection.getUrl());
 				try {
 					SiteCollectionState state = new SiteCollectionState(siteCollection);
 					SPSiteCollectionContext scContext = new SPSiteCollectionContext(siteCollection, appTokenManager.geAppTokenGenerator(spUrl, tenantId));

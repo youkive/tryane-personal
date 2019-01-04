@@ -53,6 +53,11 @@
 		  <version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<artifactId>saas-con-yammer</artifactId>
+			<groupId>com.tryane.saas.connectors</groupId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<artifactId>saas-con-yammer-utils</artifactId>
 			<groupId>com.tryane.saas.connectors</groupId>
 			<version>${project.version}</version>
@@ -86,6 +91,11 @@
 		<dependency>
 		<artifactId>saas-con-sharepoint</artifactId>
 		     <groupId>com.tryane.saas.connectors</groupId>
+		     <version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>saas-payment-webapp</artifactId>
+		     <groupId>com.tryane.saas</groupId>
 		     <version>${project.version}</version>
 		</dependency>
 		

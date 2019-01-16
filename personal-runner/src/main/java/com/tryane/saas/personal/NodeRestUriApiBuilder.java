@@ -3,8 +3,6 @@ package com.tryane.saas.personal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.net.UrlEscapers;
-
 public class NodeRestUriApiBuilder {
 
 	private static final Logger	LOGGER							= LoggerFactory.getLogger(NodeRestUriApiBuilder.class);
@@ -13,14 +11,18 @@ public class NodeRestUriApiBuilder {
 
 	private static final String	ROUTE_PUPPETEER_EXPORT_IMAGE	= "/puppeteer/export-image";
 
+	private static final String	TOKEN_USER						= "aadefezgzgrgrzehheh";
+
+	private static final String	NETWORK_ID						= "941684";
+
 	public static void main(String[] args) {
-		String saasFullUrl = "https://analytics.tryane.com/?token=1251a9c75ec5ea282ed33da4e20386ab030c894c#/export/notification-email/500603";
+		String saasFullUrl = "https%3A%2F%2Fanalytics.tryane.com%3Ftoken%3D" + TOKEN_USER + "%23%2Fexport%2Fnotification-email%2F" + NETWORK_ID;
 
 		StringBuilder nodeRestUriBuilder = new StringBuilder(NODE_REST_URL);
 		nodeRestUriBuilder.append(ROUTE_PUPPETEER_EXPORT_IMAGE);
 		nodeRestUriBuilder.append("?width=").append(720);
 		nodeRestUriBuilder.append("&selector=").append(".has-dashboard");
-		nodeRestUriBuilder.append("&fronturl=").append(UrlEscapers.urlFragmentEscaper().escape(saasFullUrl));
+		nodeRestUriBuilder.append("&fronturl=").append(saasFullUrl);
 
 		LOGGER.info("{}", nodeRestUriBuilder.toString());
 	}

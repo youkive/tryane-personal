@@ -12,7 +12,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.tryane.saas.connector.collaborators.properties.ICollaboratorPropertiesUpdateServiceDelegate;
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
 import com.tryane.saas.core.ClientContextHolder;
-import com.tryane.saas.core.collaborator.update.CollaboratorImportResult;
+import com.tryane.saas.core.collaborator.update.crud.CollaboratorImportResult;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.Network;
 import com.tryane.saas.core.network.properties.INetworkPropertyManager;
@@ -66,7 +66,7 @@ public class SPCollaboratorProfileUpdaterPerfRunner {
 
 			CollaboratorImportResult collaboratorImportResult = new CollaboratorImportResult();
 			try {
-				spCollabProfilePropertiesUpdater.updateCollaboratorProperties(LocalDate.now(), collaboratorImportResult);
+				spCollabProfilePropertiesUpdater.mergeCollaboratorProperties(LocalDate.now(), collaboratorImportResult);
 			} catch (TryaneException | IOException e) {
 				LOGGER.error("", e);
 			}

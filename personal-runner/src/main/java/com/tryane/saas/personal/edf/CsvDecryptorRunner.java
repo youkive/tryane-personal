@@ -2,6 +2,9 @@ package com.tryane.saas.personal.edf;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.input.BOMInputStream;
@@ -33,9 +36,10 @@ public class CsvDecryptorRunner extends AbstractSpringRunner {
 			BOMInputStream bomInputStream = new BOMInputStream(fileInputStream);
 			CsvReader csvReader = new CsvReader(bomInputStream, ';', Charsets.UTF_8);
 
-			CsvWriter csvWriter = new CsvWriter(OUT_RESOURCE);
+			CsvWriter csvWriter = new CsvWriter(OUT_RESOURCE, ';', StandardCharsets.UTF_8);
 			csvWriter.writeRecord(new String[] { "collaboratorid", "externalid", "mailaddress", "creationdate", "deletiondate" });
 
+			List<String[]> cache = new ArrayList<>();
 			csvReader.readHeaders();
 			while (csvReader.readRecord()) {
 				String collaboratorid = csvReader.get("collaboratorid");
@@ -44,8 +48,11 @@ public class CsvDecryptorRunner extends AbstractSpringRunner {
 				String creationdate = csvReader.get("creationdate");
 				String deletiondate = csvReader.get("deletiondate");
 
-				csvWriter.writeRecord(new String[] { collaboratorid, decryptToken(externalid), decryptToken(mailaddress), creationdate, deletiondate });
-				LOGGER.info("{}", decryptToken(mailaddress));
+				//				cache.add(new String[] { collaboratorid, decryptToken(externalid), decryptToken(mailaddress), creationdate, deletiondate });
+				//				if (flushCache(csvWriter, cache)) {
+				//					cache = new ArrayList<>();
+				//				}
+				LOGGER.info("{}, {}", decryptToken(externalid), decryptToken(mailaddress));
 			}
 
 			if (csvWriter != null) {
@@ -56,6 +63,35 @@ public class CsvDecryptorRunner extends AbstractSpringRunner {
 			LOGGER.error("", e);
 		}
 
+	}
+
+	class DecryptRunnable implements Runnable {
+
+		public DecryptRunnable() {
+
+		}
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	private Boolean flushCache(CsvWriter writer, List<String[]> cache) {
+		if (cache.size() >= 10000) {
+			cache.forEach(record -> {
+				try {
+					writer.writeRecord(record);
+				} catch (IOException e) {
+					LOGGER.error("", e);
+				}
+			});
+			writer.flush();
+			return true;
+		}
+		return false;
 	}
 
 	public final static String decryptToken(String encryptedToken) {

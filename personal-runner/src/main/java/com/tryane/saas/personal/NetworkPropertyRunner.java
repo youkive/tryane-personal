@@ -15,11 +15,12 @@ import com.tryane.saas.core.network.properties.INetworkPropertyManager;
 import com.tryane.saas.core.network.properties.NetworkPropertyNames;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
+import com.tryane.saas.results.ComputationOptions;
 import com.tryane.saas.utils.jackson.JacksonUtils;
 
 public class NetworkPropertyRunner {
 
-	public static final String				NETWORK_ID		= "s1";
+	public static final String				NETWORK_ID		= "e1";
 
 	public static final String				PROPERTY_NAME	= NetworkPropertyNames.DATA_PRIVACY_MODE;
 
@@ -55,7 +56,8 @@ public class NetworkPropertyRunner {
 		//ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 		//setNetworkProperty();
 		//displayNetworkProperty();
-		setConnectorConfig();
+		//setConnectorConfig();
+		setRecompute();
 	}
 
 	private void displayNetworkProperty() {
@@ -78,6 +80,16 @@ public class NetworkPropertyRunner {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	private void setRecompute() {
+		ComputationOptions computationOptions = new ComputationOptions();
+		computationOptions.setComputePopulation(true);
+		try {
+			networkPropertyManager.setNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.RESULTS_RECOMPUTE_TRIGGER, JacksonUtils.MAPPER.writeValueAsString(computationOptions));
+		} catch (JsonProcessingException e) {
+			LOGGER.error("", e);
 		}
 	}
 }

@@ -24,13 +24,15 @@ public class CsvDecryptorRunner extends AbstractSpringRunner {
 
 	private static final Logger	LOGGER			= LoggerFactory.getLogger(CsvDecryptorRunner.class);
 
-	private String				CSV_RESOURCE	= "C:\\Users\\Bastien\\oneDrive_tryane\\OneDrive - TRYANE\\tryane\\notes\\taches_helpdesk\\TA-474 EDF Neo Skype collaborator incohérence\\20190115_Export_core_collaborator.csv";
+	private String				CSV_RESOURCE	= "C:\\Users\\Bastien\\oneDrive_tryane\\OneDrive - TRYANE\\tryane\\notes\\taches_helpdesk\\TA-481 EDF Neo Evolution suspecte  incoherence du nombre de collaborateurs SharePoint\\20190121_Export_s1_core_collaborator.csv";
 
 	private String				OUT_RESOURCE	= "src/main/resources/com/tryane/saas/personal/edf/out.csv";
 
 	@Override
 	protected void testImplementation() {
 		Resource csvResource = new PathMatchingResourcePatternResolver().getResource("file:" + CSV_RESOURCE);
+
+		ICryptoManager cryptomanager = new AesCryptoManager();
 
 		try (FileInputStream fileInputStream = new FileInputStream(csvResource.getFile())) {
 			BOMInputStream bomInputStream = new BOMInputStream(fileInputStream);
@@ -48,33 +50,20 @@ public class CsvDecryptorRunner extends AbstractSpringRunner {
 				String creationdate = csvReader.get("creationdate");
 				String deletiondate = csvReader.get("deletiondate");
 
-				//				cache.add(new String[] { collaboratorid, decryptToken(externalid), decryptToken(mailaddress), creationdate, deletiondate });
-				//				if (flushCache(csvWriter, cache)) {
-				//					cache = new ArrayList<>();
-				//				}
-				LOGGER.info("{}, {}", decryptToken(externalid), decryptToken(mailaddress));
+				cache.add(new String[] { collaboratorid, decryptToken(externalid, cryptomanager), decryptToken(mailaddress, cryptomanager), creationdate, deletiondate });
+				if (flushCache(csvWriter, cache)) {
+					cache = new ArrayList<>();
+				}
+				LOGGER.info("{}, {}", decryptToken(externalid, cryptomanager), decryptToken(mailaddress, cryptomanager));
 			}
 
+			flushCache(csvWriter, cache);
 			if (csvWriter != null) {
 				csvWriter.flush();
 				csvWriter.close();
 			}
 		} catch (IOException e) {
 			LOGGER.error("", e);
-		}
-
-	}
-
-	class DecryptRunnable implements Runnable {
-
-		public DecryptRunnable() {
-
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
 		}
 
 	}
@@ -94,8 +83,7 @@ public class CsvDecryptorRunner extends AbstractSpringRunner {
 		return false;
 	}
 
-	public final static String decryptToken(String encryptedToken) {
-		ICryptoManager cryptomanager = new AesCryptoManager();
+	public final static String decryptToken(String encryptedToken, ICryptoManager cryptomanager) {
 		int len = encryptedToken.length();
 		byte[] data = new byte[len / 2];
 		for (int i = 0; i < len; i += 2) {

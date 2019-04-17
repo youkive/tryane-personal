@@ -16,7 +16,7 @@ public class UserRunner {
 
 	private static final Logger	LOGGER			= LoggerFactory.getLogger(UserRunner.class);
 
-	private static final Long	USER_ID_BASTIEN	= 437L;
+	private static final Long	USER_ID_BASTIEN	= 6L;
 
 	@Autowired
 	private IUserManager		userManager;
@@ -41,6 +41,7 @@ public class UserRunner {
 
 	public void displayUser(User user) {
 		LOGGER.info("user id : {}", user.getId());
+		LOGGER.info("client id : {}", user.getId());
 		LOGGER.info("nom : {}", user.getDisplayName());
 		LOGGER.info("mail: {}", user.getMailAddress());
 		LOGGER.info("props : {}", user.getData().toString());
@@ -48,11 +49,11 @@ public class UserRunner {
 
 	public void execute() {
 		//User user = userManager.getUserByEmail("bastien.vaneenaeme@tryane.com");
-		//User user = userManager.getUserById(USER_ID_BASTIEN);
+		User user = userManager.getUserById(USER_ID_BASTIEN);
 		//displayUser(user);
 
-		//displayUsersOfClient(1L);
-		displayAllUsersWithEmail("bastien.vaneenaeme@tryane.com");
+		displayUsersOfClient(1L);
+		//displayAllUsersWithEmail("usclaro");
 	}
 
 	public void setGroupAdminProperties() {
@@ -71,7 +72,7 @@ public class UserRunner {
 	private void displayAllUsersWithEmail(String email) {
 		clientManager.getAllClientIds().forEach(clientId -> {
 			userManager.getAllUsers(clientId).stream().filter(user -> {
-				return user.getMailAddress().equals(email);
+				return user.getMailAddress().contains(email);
 			}).forEach(user -> {
 				displayUser(user);
 			});

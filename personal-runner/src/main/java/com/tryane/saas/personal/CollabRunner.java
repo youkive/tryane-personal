@@ -24,9 +24,9 @@ public class CollabRunner {
 
 	private static Logger			LOGGER				= LoggerFactory.getLogger(CollabRunner.class);
 
-	private static final String		NETWORK_ID			= "s443696";
+	private static final String		NETWORK_ID			= "s1";
 
-	private static final String		EMAIL_FILTER		= "katelyn.estelow@avantorsciences.com";
+	private static final String		EMAIL_FILTER		= "LGU000006";
 
 	private static final String		EXTERNAL_ID_FILTER	= "i:0#.f|membership|cathy.ibrahim_vwr.com#ext#@avantorsciences.onmicrosoft.com";
 
@@ -60,7 +60,7 @@ public class CollabRunner {
 		//searchCollaboratorByEmail(EMAIL_FILTER);
 		//searchCollaboratorByExternalId(EXTERNAL_ID_FILTER);
 		displayAllCollaborators();
-		//displayCollab(1049L);
+		//displayCollab(6L);
 	}
 
 	private void displayAllCollaborators() {
@@ -97,7 +97,7 @@ public class CollabRunner {
 
 			@Override
 			public void processObject(Collaborator collaborator) {
-				if (collaborator.getMailAddress().equals(emailSearched)) {
+				if (collaborator.getMailAddress().contains(emailSearched.toLowerCase())) {
 					displayCollab(collaborator.getId());
 				}
 			}

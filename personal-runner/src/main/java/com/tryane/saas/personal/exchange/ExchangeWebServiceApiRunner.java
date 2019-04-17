@@ -46,8 +46,11 @@ public class ExchangeWebServiceApiRunner extends AbstractSpringRunner {
 		getFolderRequest.setFolderShape(ResponseShapeBuilder.buildFolderResponseShape(DefaultShapeNamesType.ID_ONLY));
 
 		Holder<GetFolderResponseType> responseHolder = new Holder<GetFolderResponseType>();
-		exchangeWS.getFolder(getFolderRequest, responseHolder, exchangeWSConnectionInfos, "tryane@" + DOMAIN);
+		
+		exchangeWS.testServiceAvailability(exchangeWSConnectionInfos,"tryane@" + DOMAIN);
+		LOGGER.info("Exchange Connection Test => OK");
 
+		exchangeWS.getFolder(getFolderRequest, responseHolder, exchangeWSConnectionInfos, "tryane@" + DOMAIN);
 		/* Build result */
 		List<JAXBElement<? extends ResponseMessageType>> responseMessageList = responseHolder.value.getResponseMessages().getCreateItemResponseMessageOrDeleteItemResponseMessageOrGetItemResponseMessage();
 		for (JAXBElement<? extends ResponseMessageType> responseMessage : responseMessageList) {
@@ -67,7 +70,7 @@ public class ExchangeWebServiceApiRunner extends AbstractSpringRunner {
 	}
 
 	public static void main(String[] args) {
-		new ExchangeWebServiceApiRunner().runTest("dev", PersonalAppConfig.class);
+		new ExchangeWebServiceApiRunner().runTest("exchangeim-authentication-kerberos,kerberos-debug", PersonalAppConfig.class);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.tryane.saas.personal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tryane.saas.core.user.IUserManager;
@@ -10,8 +12,11 @@ import com.tryane.saas.core.user.token.UserToken.TokenSource;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 import com.tryane.saas.utils.screenshot.IScreenshotService;
+import com.tryane.saas.utils.screenshot.ScreenshotServiceException;
 
 public class ScreenshotServiceRunner extends AbstractSpringRunner {
+
+	private static final Logger	LOGGER	= LoggerFactory.getLogger(ScreenshotServiceRunner.class);
 
 	@Autowired
 	private IScreenshotService	screenshotService;
@@ -26,7 +31,11 @@ public class ScreenshotServiceRunner extends AbstractSpringRunner {
 	protected void testImplementation() {
 		User user = userManager.getUserById(437L);
 		UserToken token = userTokenManager.registerUserToken(user, TokenSource.EXPORT_IMPERSONATION);
-		screenshotService.screenshotElement(token.getToken(), "/export/notification-email/500603", 720, ".has-dashboard");
+		try {
+			screenshotService.screenshotElement(token.getToken(), "/export/notification-email/500603", 720, ".has-dashboard");
+		} catch (ScreenshotServiceException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

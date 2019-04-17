@@ -1,5 +1,6 @@
 package com.tryane.saas.personal;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import com.tryane.saas.utils.jackson.JacksonUtils;
 
 public class NetworkPropertyRunner {
 
-	public static final String				NETWORK_ID		= "e1";
+	public static final String				NETWORK_ID		= "s1";
 
 	public static final String				PROPERTY_NAME	= NetworkPropertyNames.DATA_PRIVACY_MODE;
 
@@ -85,7 +86,8 @@ public class NetworkPropertyRunner {
 
 	private void setRecompute() {
 		ComputationOptions computationOptions = new ComputationOptions();
-		computationOptions.setComputePopulation(true);
+		computationOptions.setAllOptions(true);
+		computationOptions.setRecomputeStartDate(LocalDate.parse("2019-03-01"));
 		try {
 			networkPropertyManager.setNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.RESULTS_RECOMPUTE_TRIGGER, JacksonUtils.MAPPER.writeValueAsString(computationOptions));
 		} catch (JsonProcessingException e) {

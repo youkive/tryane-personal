@@ -12,7 +12,6 @@ import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
 import com.tryane.saas.connector.sharepoint.sitecollections.usercutomactions.remove.ISPInjectionRemoveManager;
 import com.tryane.saas.connector.sharepoint.utils.api.ISPALMAPI;
-import com.tryane.saas.core.AbstractSpringRunner;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.Network;
@@ -21,6 +20,7 @@ import com.tryane.saas.core.network.properties.INetworkPropertyManager;
 import com.tryane.saas.core.network.properties.NetworkPropertyNames;
 import com.tryane.saas.core.sp.sitecol.ISPSiteCollectionManager;
 import com.tryane.saas.core.sp.sitecol.SPSiteCollection;
+import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 

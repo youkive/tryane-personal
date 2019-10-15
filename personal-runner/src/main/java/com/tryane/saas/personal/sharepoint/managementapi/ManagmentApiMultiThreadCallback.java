@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.csvreader.CsvWriter;
+import com.google.common.collect.Lists;
 import com.tryane.saas.connector.managmentapi.api.IO365ManagmentActivityApi;
 import com.tryane.saas.connector.managmentapi.model.O365ManagmentContent;
 import com.tryane.saas.connector.managmentapi.model.O365ManagmentContentBlob;
@@ -28,8 +29,6 @@ import com.tryane.saas.core.network.properties.INetworkPropertyManager;
 import com.tryane.saas.core.network.properties.NetworkPropertyNames;
 import com.tryane.saas.utils.hibernate.ICallBack;
 import com.tryane.saas.utils.multithreading.TryaneThreadFactoryBuilder;
-
-import jersey.repackaged.com.google.common.collect.Lists;
 
 public class ManagmentApiMultiThreadCallback implements ICallBack<O365ManagmentContentBlob> {
 	private static final Logger			LOGGER		= LoggerFactory.getLogger(O365ManagmentApiBlobMultiThreadCallback.class);
@@ -79,7 +78,8 @@ public class ManagmentApiMultiThreadCallback implements ICallBack<O365ManagmentC
 	@Override
 	public void processObject(O365ManagmentContentBlob objectToProcess) {
 		try {
-			ThreadRunnable thread = new ThreadRunnable(ClientContextHolder.getNetwork(), objectToProcess, appTokenManager.geAppTokenGenerator(IO365Resources.MANAGMENT_API_RESOURCE, this.tenantId).getToken());
+			ThreadRunnable thread = new ThreadRunnable(ClientContextHolder.getNetwork(), objectToProcess, appTokenManager.geAppTokenGenerator(IO365Resources.MANAGMENT_API_RESOURCE, this.tenantId)
+					.getToken());
 			threadPool.execute(thread);
 		} catch (O365UserAuthenticationException e) {
 			LOGGER.error("", e);
@@ -107,7 +107,8 @@ public class ManagmentApiMultiThreadCallback implements ICallBack<O365ManagmentC
 				List<O365ManagmentContent> contents = o365ManagementActivityApi.getContentsInBlob(managementApiToken, blob.getContentUri());
 				contents.forEach(content -> {
 					try {
-						List<String> record = Lists.newArrayList(content.getId(), content.getOperation(), content.getSite(), content.getWebId(), content.getListId(), content.getObjectId(), content.getListItemUniqId(), content.getUserId(), content.getCreationTime());
+						List<String> record = Lists.newArrayList(content.getId(), content.getOperation(), content.getSite(), content.getWebId(), content.getListId(), content.getObjectId(), content
+								.getListItemUniqId(), content.getUserId(), content.getCreationTime());
 						synchronized (this) {
 							writeInCsv(record.toArray(new String[0]));
 						}

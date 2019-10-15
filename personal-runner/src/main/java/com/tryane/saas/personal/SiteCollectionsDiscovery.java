@@ -5,7 +5,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
 import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
-import com.tryane.saas.connector.sharepoint.sitecollections.ISPAllSiteCollectionDiscoveryProcess;
+import com.tryane.saas.connector.sharepoint.sitecollections.discovery.ISPAllSiteCollectionDiscoveryManager;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.Network;
@@ -17,7 +17,7 @@ public class SiteCollectionsDiscovery {
 	private static final String						NETWORK_ID	= "s1452";
 
 	@Autowired
-	private ISPAllSiteCollectionDiscoveryProcess	siteCollectionDiscoveryProcess;
+	private ISPAllSiteCollectionDiscoveryManager	siteCollectionDiscoveryProcess;
 
 	@Autowired
 	private INetworkManager							networkManager;

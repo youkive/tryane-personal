@@ -14,7 +14,6 @@ import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
 import com.tryane.saas.connector.sharepoint.sitecollections.usercutomactions.remove.ISPJSInjectionManagerUtils;
 import com.tryane.saas.connector.sharepoint.utils.api.ISPSiteAPI;
 import com.tryane.saas.connector.sharepoint.utils.model.SPSiteUserCustomAction;
-import com.tryane.saas.core.AbstractSpringRunner;
 import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.INetworkManager;
 import com.tryane.saas.core.network.Network;
@@ -22,6 +21,7 @@ import com.tryane.saas.core.network.properties.INetworkPropertyManager;
 import com.tryane.saas.core.network.properties.NetworkPropertyNames;
 import com.tryane.saas.core.sp.sitecol.ISPSiteCollectionManager;
 import com.tryane.saas.core.sp.sitecol.SPSiteCollection;
+import com.tryane.saas.personal.AbstractSpringRunner;
 import com.tryane.saas.personal.config.PersonalAppConfig;
 import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 import com.tryane.saas.utils.string.StringUtils;
@@ -88,11 +88,13 @@ public class WSPUserCustomActionRunner extends AbstractSpringRunner {
 
 	private Boolean isWSPUca(SPSiteUserCustomAction uca) {
 		String tryaneServerUrl = "https://analytics.tryane.com";
-		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl) && (StringUtils.isNullOrEmpty(uca.getTitle()) || !uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfJsUserCustomAction(tryaneServerUrl)));
+		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl)
+				&& (StringUtils.isNullOrEmpty(uca.getTitle()) || !uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfJsUserCustomAction(tryaneServerUrl)));
 	}
 
 	private Boolean isTryaneNewAgent(SPSiteUserCustomAction uca) {
 		String tryaneServerUrl = "https://analytics.tryane.com";
-		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl) && (StringUtils.isNotNullNorEmpty(uca.getTitle()) && uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfJsUserCustomAction(tryaneServerUrl)));
+		return StringUtils.isNotNullNorEmpty(uca.getScriptBlock()) && uca.getScriptBlock().contains(tryaneServerUrl)
+				&& (StringUtils.isNotNullNorEmpty(uca.getTitle()) && uca.getTitle().equals(ISPJSInjectionManagerUtils.buildTitleOfJsUserCustomAction(tryaneServerUrl)));
 	}
 }

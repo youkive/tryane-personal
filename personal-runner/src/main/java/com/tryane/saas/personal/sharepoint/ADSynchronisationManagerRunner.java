@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.tryane.saas.connector.graph.utils.manager.IADSynchronizationManager;
+import com.tryane.saas.connector.graph.manager.IADSynchronizationManager;
 import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
 import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;

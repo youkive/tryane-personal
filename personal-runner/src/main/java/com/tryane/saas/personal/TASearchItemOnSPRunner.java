@@ -12,6 +12,7 @@ import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
 import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
 import com.tryane.saas.connector.o365.utils.token.IAppTokenManager;
+import com.tryane.saas.connector.o365.utils.token.IO365TokenSupplier;
 import com.tryane.saas.connector.sharepoint.utils.api.ISPWebListAPI;
 import com.tryane.saas.connector.sharepoint.utils.model.SharepointSPItem;
 import com.tryane.saas.core.ClientContextHolder;
@@ -53,7 +54,13 @@ public class TASearchItemOnSPRunner extends AbstractSpringRunner {
 
 		try {
 			Set<String> found = Sets.newHashSet();
-			webListApi.procesAllItemsInListCreatedAfter(new LocalDate(0), "https://goairrosti.sharepoint.com", appTokenManager.geAppTokenGenerator(spUrl, tenantId).getToken(), "5cee0542-b377-48da-b19b-340ea9e3a0d1", new ICallBack<SharepointSPItem>() {
+			webListApi.procesAllItemsInListCreatedAfter(new LocalDate(0), "https://goairrosti.sharepoint.com", new IO365TokenSupplier() {
+
+				@Override
+				public String getToken() throws O365UserAuthenticationException {
+					return appTokenManager.geAppTokenGenerator(spUrl, tenantId).getToken();
+				}
+			}, "5cee0542-b377-48da-b19b-340ea9e3a0d1", new ICallBack<SharepointSPItem>() {
 
 				@Override
 				public void processObject(SharepointSPItem item) {

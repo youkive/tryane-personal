@@ -27,10 +27,10 @@ import com.tryane.saas.core.ClientContextHolder;
 import com.tryane.saas.core.network.Network;
 import com.tryane.saas.core.network.properties.INetworkPropertyManager;
 import com.tryane.saas.core.network.properties.NetworkPropertyNames;
-import com.tryane.saas.utils.hibernate.ICallBack;
+import com.tryane.saas.utils.executor.IInterruptibleCallBack;
 import com.tryane.saas.utils.multithreading.TryaneThreadFactoryBuilder;
 
-public class ManagmentApiMultiThreadCallback implements ICallBack<O365ManagmentContentBlob> {
+public class ManagmentApiMultiThreadCallback implements IInterruptibleCallBack<O365ManagmentContentBlob> {
 	private static final Logger			LOGGER		= LoggerFactory.getLogger(O365ManagmentApiBlobMultiThreadCallback.class);
 
 	@Autowired

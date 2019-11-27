@@ -32,7 +32,7 @@ public class SiteCollectionsDiscovery {
 			Network currentNetwork = runner.networkManager.getNetworkById(NETWORK_ID);
 			ClientContextHolder.setNetwork(currentNetwork);
 
-			runner.siteCollectionDiscoveryProcess.updateSiteCollectionListProcess();
+			runner.siteCollectionDiscoveryProcess.discoverAllSiteCollections();
 		} catch (O365ConnectionException | O365HttpErrorException e) {
 			e.printStackTrace();
 		} finally {

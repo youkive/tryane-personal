@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tryane.saas.connector.common.manager.collaboratorid.IIDManager;
+import com.tryane.saas.connector.managmentapi.client.ManagmentActivityApiException;
 import com.tryane.saas.connector.o365.utils.exception.O365ConnectionException;
 import com.tryane.saas.connector.o365.utils.exception.O365HttpErrorException;
 import com.tryane.saas.connector.o365.utils.exception.O365UserAuthenticationException;
@@ -68,8 +69,8 @@ public class ManagementAPIProcessRunner extends AbstractSpringRunner {
 
 		try {
 			managmentAPIProcess.processEventsInManagmentApi();
-		} catch (O365ConnectionException | O365HttpErrorException | O365UserAuthenticationException e) {
-			LOGGER.error("{}", e);
+		} catch (O365ConnectionException | O365HttpErrorException | O365UserAuthenticationException | ManagmentActivityApiException e) {
+			LOGGER.error("", e);
 		}
 	}
 

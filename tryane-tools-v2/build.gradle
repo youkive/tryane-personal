@@ -1,0 +1,31 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+	id 'eclipse'
+}
+
+group = 'com.tryane.saas.toolsv2'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-jersey'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	implementation('com.tryane.saas:saas-core:1.0.0-SNAPSHOT')
+	implementation('com.tryane.saas:saas-core-base:1.0.0-SNAPSHOT')
+	
+	implementation('org.flywaydb:flyway-core:5.1.0')
+	implementation('javax.mail:mail:1.4.5')
+}
+
+test {
+	useJUnitPlatform()
+}

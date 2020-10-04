@@ -24,7 +24,7 @@ public class CollabRunner {
 
 	private static Logger			LOGGER				= LoggerFactory.getLogger(CollabRunner.class);
 
-	private static final String		NETWORK_ID			= "s1";
+	private static final String		NETWORK_ID			= "s443708";
 
 	private static final String		EMAIL_FILTER		= "LGU000006";
 
@@ -70,7 +70,7 @@ public class CollabRunner {
 			@Override
 			public void processObject(Collaborator collaborator) {
 				count.incrementAndGet();
-				LOGGER.info("{}", collaborator.getExternalId());
+				LOGGER.info("{} | {}", collaborator.getExternalId(), collaborator.getMailAddress());
 			}
 		}, LocalDate.now());
 		LOGGER.info("{} collaborators", count.get());

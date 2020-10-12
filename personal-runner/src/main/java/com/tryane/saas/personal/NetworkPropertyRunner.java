@@ -21,9 +21,9 @@ import com.tryane.saas.utils.jackson.JacksonUtils;
 
 public class NetworkPropertyRunner {
 
-	public static final String				NETWORK_ID		= "s1";
+	public static final String				NETWORK_ID		= "1871154";
 
-	public static final String				PROPERTY_NAME	= NetworkPropertyNames.DATA_PRIVACY_MODE;
+	public static final String				PROPERTY_NAME	= NetworkPropertyNames.YAMMER_TOKEN;
 
 	public final String						NEW_VALUE		= Boolean.TRUE.toString();
 
@@ -56,9 +56,9 @@ public class NetworkPropertyRunner {
 	private void execute() {
 		//ClientContextHolder.setNetwork(networkManager.getNetworkById(NETWORK_ID));
 		//setNetworkProperty();
-		//displayNetworkProperty();
+		displayNetworkProperty();
 		//setConnectorConfig();
-		setRecompute();
+		//setRecompute();
 	}
 
 	private void displayNetworkProperty() {

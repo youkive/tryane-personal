@@ -23,54 +23,54 @@ import com.tryane.saas.personal.config.PersonalDatabaseConfig;
 
 public class YammerCollabExternalAnalyser extends AbstractSpringRunner {
 
-	private static final Logger		LOGGER		= LoggerFactory.getLogger(YammerCollabExternalAnalyser.class);
+    private static final Logger     LOGGER     = LoggerFactory.getLogger(YammerCollabExternalAnalyser.class);
 
-	private static final String		NETWORK_ID	= "425331";
+    private static final String     NETWORK_ID = "425331";
 
-	@Autowired
-	private INetworkManager			networkManager;
+    @Autowired
+    private INetworkManager         networkManager;
 
-	@Autowired
-	private INetworkPropertyManager	networkPropertyManager;
+    @Autowired
+    private INetworkPropertyManager networkPropertyManager;
 
-	@Autowired
-	private ICollaboratorManager	collaboratorManager;
+    @Autowired
+    private ICollaboratorManager    collaboratorManager;
 
-	@Autowired
-	private IYammerUserAPI			yammerUserApi;
+    @Autowired
+    private IYammerUserAPI          yammerUserApi;
 
-	@Override
-	protected void testImplementation() {
-		Network network = networkManager.getNetworkById(NETWORK_ID);
-		ClientContextHolder.setNetwork(network);
+    @Override
+    protected void testImplementation() {
+        Network network = networkManager.getNetworkById(NETWORK_ID);
+        ClientContextHolder.setNetwork(network);
 
-		String yammerToken = networkPropertyManager.getNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.YAMMER_TOKEN);
-		AtomicLong countExternalCollab = new AtomicLong(0);
-		AtomicLong countCollab = new AtomicLong(0);
-		AtomicLong countExternalCollabInDb = new AtomicLong(0);
+        String yammerToken = networkPropertyManager.getNetworkPropertyValue(NETWORK_ID, NetworkPropertyNames.YAMMER_TOKEN);
+        AtomicLong countExternalCollab = new AtomicLong(0);
+        AtomicLong countCollab = new AtomicLong(0);
+        AtomicLong countExternalCollabInDb = new AtomicLong(0);
 
-		collaboratorManager.processAllValidCollaboratorsAndExtForClientAtDate(collaborator -> {
-			countCollab.incrementAndGet();
-			if (collaborator.isExternal()) {
-				countExternalCollabInDb.incrementAndGet();
-			}
-			try {
-				YammerUser yammerUser = yammerUserApi.getUserById(yammerToken, Long.parseLong(collaborator.getExternalId()));
-				if (yammerUser.getGuest()) {
-					countExternalCollab.incrementAndGet();
-				}
+        collaboratorManager.processAllValidCollaboratorsAndExtForClientAtDate(collaborator -> {
+            countCollab.incrementAndGet();
+            if (collaborator.isExternal()) {
+                countExternalCollabInDb.incrementAndGet();
+            }
+            try {
+                YammerUser yammerUser = yammerUserApi.getUserById(yammerToken, collaborator.getExternalId());
+                if (yammerUser.getGuest()) {
+                    countExternalCollab.incrementAndGet();
+                }
 
-			} catch (YammerConnectionException | YammerHttpErrorException | NumberFormatException e) {
-				LOGGER.error("", e);
-			}
-		}, LocalDate.now());
+            } catch (YammerConnectionException | YammerHttpErrorException | NumberFormatException e) {
+                LOGGER.error("", e);
+            }
+        }, LocalDate.now());
 
-		LOGGER.info("{} external collaborators in DB", countExternalCollabInDb.get());
-		LOGGER.info("{} external Collab on {} collabs", countExternalCollab.get(), countCollab.get());
-	}
+        LOGGER.info("{} external collaborators in DB", countExternalCollabInDb.get());
+        LOGGER.info("{} external Collab on {} collabs", countExternalCollab.get(), countCollab.get());
+    }
 
-	public static void main(String[] args) {
-		new YammerCollabExternalAnalyser().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
-	}
+    public static void main(String[] args) {
+        new YammerCollabExternalAnalyser().runTest("dev", PersonalAppConfig.class, PersonalDatabaseConfig.class);
+    }
 
 }
